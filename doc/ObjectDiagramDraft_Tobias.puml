@@ -1,0 +1,13 @@
+@startuml
+hide circle
+skinparam classAttributeIconSize 0
+title Objekte
+
+object __regendauer__{
+    name = "kurzer Schauer"
+    menge = 1
+    __
+    waitForRainToStop()
+    }
+
+@enduml

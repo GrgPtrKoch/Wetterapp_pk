@@ -1,0 +1,18 @@
+@startuml
+hide circle
+skinparam classAttributeIconSize 0
+title Klasse
+
+class Regen{
+    - name: String
+    - Regenmenge: Int
+    + Dauer (name: String, Regenmenge: int)
+    + getName(): String
+    + setName(name: String)
+    + getRegenmenge(): Int
+    + setRegenmenge(regenmenge: Int)
+    + waitForRainToStop()
+    - rainHasStopped(): Boolean
+    }
+
+@enduml
