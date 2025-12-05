@@ -18,6 +18,8 @@ class Icon{
     - name: String
     - iconList: mutableListOf[]
     --
+    + getName(): String
+    + setName(name: String)
     + addSonne(icon:[Sonne])
     + addRegen(icon:[Regen])
     + addWolken(icon:[Wolken])
@@ -49,7 +51,7 @@ class Wind{
     - maxGeschwindigkeit = Int
     - einheit = String
     - richtung= String
-    __
+    --
     + setArt(art:String)
     + getArt(): String
     + setWindgeschwindigkeit(geschwindigkeit: Int)
