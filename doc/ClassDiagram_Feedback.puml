@@ -8,11 +8,11 @@ title Klassen
 
 
 Manager --> Api
-Api <|-.- APIHandler
+Api <|-. APIHandler
 UIClass --> Logic
-Logic <|-.- Manager
+Logic <|-. Manager
 Manager --> Fileinterface
-Fileinterface <|-.- File
+Fileinterface <|-. File
 Manager --> Weather
 
 class Manager {
