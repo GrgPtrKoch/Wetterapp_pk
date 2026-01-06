@@ -12,6 +12,7 @@ interface Fileinterface {
     fun readStoredLocation()
     fun storeWeather(weather: WeatherData) {}
     fun storeLocation(location: LocationData) {}
+    fun fileList(): List<File>
     fun clearOldData()
     fun checkAccuracy()
 }
