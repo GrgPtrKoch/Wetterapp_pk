@@ -41,6 +41,10 @@ class File(
         }
     }
 
+    override fun readFileList(): MutableList<File> {
+        TODO("Not yet implemented")
+    }
+
     override fun storeWeather(weather: WeatherData) {
         WeatherList.add("Regen")
         println("Wetter ist: $WeatherList")
@@ -51,7 +55,7 @@ class File(
         println("Ort ist: $LocationList")
     }
 
-    override fun fileList(): MutableList<File> {
+    override fun storeFileList(): MutableList<File> {
         TODO("Not yet implemented")
     }
 
