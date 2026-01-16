@@ -40,8 +40,8 @@ interface Fileinterface {
 }
 
 interface Api {
-     getWeatherData(): MutableList<Weather>
-     getLocation(): MutableList<Location>
+     fun fetchWeather(location: Location): Weather?
+     fun fetchLocations(searchText: String): MutableList<Location>
 }
 
 interface Logic {
@@ -63,11 +63,8 @@ class File {
 }
 
 class APIHandler {
-    -url: URL
-    -connection: HttpURLConnection
-    -responseCode: Int
-    getWeatherData(): MutableList<Weather>
-    getLocation(): MutableList<Location>
+    fun fetchWeather(location: Location): Weather?
+    fun fetchLocations(searchText: String): MutableList<Location>
 
 }
 
