@@ -11,7 +11,6 @@ import java.time.LocalDateTime
 class ApiHandler() : Api {
 
     override fun fetchWeather(location: Location): Weather? {
-
         var result: Weather? = null
         val latitude = location.getLatitude()
         val longitude = location.getLongitude()
@@ -121,65 +120,6 @@ class ApiHandler() : Api {
         }
         return result
     }
-
-// Gemini 3: Eine Erweiterung der JSONObject-Klasse um einen 0-und-1-Int-Rückgabewert zu einem Boolen umzuwandeln.
-
-//    fun getCurrentWeatherData(location: Location) : CurrentWeather? {
-//        var result: CurrentWeather? = null
-//        val latitude = location.getLatitude()
-//        val longitude = location.getLongitude()
-//        val apiUrl = "https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&current=temperature_2m,relative_humidity_2m,weather_code&timezone=Europe%2FBerlin&forecast_days=7"
-////        val apiUrl2 = "https://api.open-meteo.com/v1/forecast?latitude=47.37&longitude=8.55&hourly=temperature_2m,relative_humidity_2m,weather_code&models=meteoswiss_icon_ch1&current=temperature_2m,relative_humidity_2m,weather_code&timezone=Europe%2FBerlin&forecast_days=7"
-////        val apiUrl3 = "https://api.open-meteo.com/v1/forecast?latitude=47.37&longitude=8.55&daily=weather_code,temperature_2m_max,temperature_2m_min,sunset,sunrise&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,wind_speed_10m,wind_direction_10m,weather_code,freezing_level_height,snowfall_height,is_day&models=meteoswiss_icon_ch1&current=weather_code,precipitation,apparent_temperature,relative_humidity_2m,temperature_2m,wind_speed_10m,wind_direction_10m&timezone=Europe%2FBerlin&forecast_days=7"
-//// Internetquelle für JSON-Parser: https://gist.github.com/Da9el00/a29b4acca9dec698e18f88fca2eb8c96
-//        try {
-//
-//            val url : URL = URI.create(apiUrl).toURL()
-//            val connection : HttpURLConnection = url.openConnection() as HttpURLConnection
-//
-//            //Request method: GET
-//            connection.requestMethod = "GET"
-//
-//            // Response code
-//            val responseCode: Int = connection.responseCode     // 200 = HTTP_OK: Abruf funktioniert
-//
-//            if (responseCode == HttpURLConnection.HTTP_OK) {
-//                // Read the response data
-//                val reader = BufferedReader(InputStreamReader(connection.inputStream))
-//                var line: String?
-//                val response = StringBuilder()
-//
-//                while (reader.readLine().also { line = it } != null) {
-//                    response.append(line)
-//                }
-//                reader.close()
-//// Mit Google-KI Anpassung am Code:
-//                val responseText = JSONObject(response.toString())
-//                println("responseText-Var: $responseText")
-//
-//                if (responseText.has("current")) {
-//                    // 1. geschachtelte Objekt "current" holen
-//                    val currentObj = responseText.getJSONObject("current")
-//
-//                    // 2. Werte aus "currentObj" extrahieren
-//                    val temperature = currentObj.getDouble("temperature_2m")
-//                    val humidity = currentObj.getInt("relative_humidity_2m")
-//                    val weatherCode = currentObj.getInt("weather_code")
-//
-//                    result = CurrentWeather(location, temperature, humidity, weatherCode)
-//                }
-//
-//            } else {
-//                println("Error: Unable to fetch data from the API")
-//            }
-//            // Close the connection
-//            connection.disconnect()
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
-//
-//        return result
-//    }
 
     override fun fetchLocations(searchText: String) : MutableList<Location> {
         val results = mutableListOf<Location>()
