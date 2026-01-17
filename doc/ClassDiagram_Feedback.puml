@@ -14,25 +14,25 @@ Fileinterface <|-. File
 Manager --> Fileinterface
 Manager --> Api
 Manager --> Weather
-Manager --> Location
+Manager -> Location
+Weather --> WeatherCode
+Weather --> HourlyData
+Weather --> DailyData
 Manager --> WeatherCode
 Favorites --> Location
 Manager --> Favorites
 
 class Manager {
-    apiHandler: Api
-    getPollenDataAt(time: Date)
-    storeWeather(): File
-    storeLocation(): File
-    fetchWeather(element: MutableList<Weather>)
-    fetchLocation(element: MutableList<Location>)
-    weatherCode: WeatherCode
-    setWeather()
-    getCurrentWeather()
-    getLocation()
-    getForecast()
-    getFavorites()
-    getHistoricWeather()
+    - apiHandler: Api
+    - fetchedWeather: MutableList<Weather>
+    - fetchedLocations: MutableList<Location>
+    - weatherCodes: WeatherCode
+    Manager(apiHandler: API)
+    getCurrentWeather(location: Location): List<Any>
+    getHourlyWeather(location: Location): List<Any>
+    getDailyWeather(location: Location): List<Any>
+    fetchLocations(searchedLocation: String): MutableList<Location>
+    pickLocation(search: String, choice: Int): Location
 }
 
 interface Fileinterface {
@@ -44,8 +44,8 @@ interface Fileinterface {
 }
 
 interface Api {
-     getWeatherData(): MutableList<Weather>
-     getLocation(): MutableList<Location>
+     fun fetchWeather(location: Location): Weather?
+     fun fetchLocations(searchText: String): MutableList<Location>
 }
 
 
@@ -71,26 +71,44 @@ class File {
 
 
 class APIHandler {
-    -url: URL
-    -connection: HttpURLConnection
-    -responseCode: Int
-    getWeatherData(): MutableList<Weather>
-    getLocation(): MutableList<Location>
+    fun fetchWeather(location: Location): Weather?
+    fun fetchLocations(searchText: String): MutableList<Location>
 
 }
 
 class Weather {
-    timeStamp: Date
-    location: Location
-    temperature2M: Double
+    temperature: Double
     apparentTemperature: Double
-    freezingLevelHeight: Double
-    relativeHumidity2M: Int
-    rain: Double
-    windSpeed10m: Int
-    windDirection10m: Int
-    isDay: Boolean
+    humidity: Int
+    precipitation: Int
+    windSpeed: Int
+    windDirection: Int
     weatherCode: WeatherCode
+    hourlyList: List<HourlyData>
+    dailyList: List<DailyData>
+}
+
+class HourlyData {
+    times: LocalDateTime
+    temperature2M: Double
+    apparentTemperature2M: Double
+    relativeHumidity2M: Int
+    precipitation: Int
+    windSpeed: Int
+    windDirection: Int
+    freezingLevel: Double
+    weatherCode: Int
+}
+
+class DailyData {
+    time: LocalDateTime
+    temperatureMin: Double
+    temperatureMax: Double
+    apparentTemperatureMin: Double
+    apparentTemperatureMax: Double
+    sunrise: LocalDateTime
+    sunset: LocalDateTime
+    weatherCode: Int
 }
 
 class Location {
