@@ -1,6 +1,6 @@
 import java.time.LocalDateTime
 
-data class CurrentWeather(
+data class CurrentWeather(                  // Sehr wahrscheinlich auch löschen! (gemäss Peter)
     private val location: Location,
     private val temperature2M: Double,
     private val relativeHumidity2M: Int,

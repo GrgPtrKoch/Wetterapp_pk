@@ -1,4 +1,4 @@
-object Favorites {
+object favorites {
     private val favorites = mutableListOf<String>()
 
     fun addFavorites(location: String){

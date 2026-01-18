@@ -9,10 +9,32 @@ import kotlin.math.E
   und die Guetepruefung durchgeführt
  */
 
+
+/* Nur als info, später wieder löschen
+class FileHandler {
+    private var number = 1
+    private val dataFile = File("File", number)
+
+    fun work()  {
+        dataFile.startFileInterface()
+
+        if (dataFile.running) {
+            LocationList.add("Thun")
+            WeatherList.add("Sonnenschein")
+            dataFile.readStoredWeather()
+            dataFile.readStoredLocation()
+        }
+        else {
+            println("File already exists")
+        }
+    }
+}
+ */
+
 annotation class LocationData
 annotation class WeatherData
 
-class File(
+data class File(
     private val name: String,
     private val nr: Int) : Fileinterface {
     var running = false

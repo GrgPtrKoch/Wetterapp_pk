@@ -1,7 +1,7 @@
 @startuml
 'https://plantuml.com/class-diagram
 
-
+!pragma layout smetana
 skinparam classAttributeIconSize 0
 title Klassen
 
@@ -15,12 +15,11 @@ Manager --> Fileinterface
 Manager --> Api
 Manager --> Weather
 Manager -> Location
-Weather --> WeatherCode
 Weather --> HourlyData
 Weather --> DailyData
 Manager --> WeatherCode
-Favorites --> Location
-Manager --> Favorites
+favorites --> Location
+Manager --> favorites
 
 class Manager {
     - apiHandler: Api
@@ -83,7 +82,7 @@ class Weather {
     precipitation: Int
     windSpeed: Int
     windDirection: Int
-    weatherCode: WeatherCode
+    weatherCode: Int
     hourlyList: List<HourlyData>
     dailyList: List<DailyData>
 }
@@ -123,14 +122,12 @@ class Location {
     toggleFavorite()
 }
 
-object Favorites {
+object favorites {
     - favorites:MutableList<Location>
     - addFavorites(location: String)
     - removeFavorites()
     - showFavorites()
 }
-
-
 
 enum WeatherCode {
      SONNIG
