@@ -14,7 +14,7 @@ Fileinterface <|-. File
 Manager --> Fileinterface
 Manager --> Api
 Manager --> Weather
-Manager -> Location
+Weather -> Location
 Weather --> HourlyData
 Weather --> DailyData
 Manager --> WeatherCode
