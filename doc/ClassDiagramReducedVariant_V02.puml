@@ -10,8 +10,8 @@ title Klassen
 Api <|-. APIHandler
 UIClass --> Logic
 Logic <|-. Manager
-Fileinterface <|-. WeatherList
-Manager --> Fileinterface
+FileInterface <|-. WeatherList
+Manager --> FileInterface
 Manager --> Api
 Manager --> Weather
 Weather -> Location
@@ -32,15 +32,15 @@ class Manager {
     getDailyWeather(location: Location): List<Any>
     fetchLocations(searchedLocation: String): MutableList<Location>
     pickLocation(search: String, choice: Int): Location
-    storeWeatherData(weather: Weather): List<Any>
-    readWeatherData()
+    storeWeatherDataHourly(weather: Weather): List<Any>
+    readWeatherDataHourly()
     clearOldData()
     checkAccuracy()
 }
 
-interface Fileinterface {
-    storeWeatherData(weather: Weather)
-    readWeatherDataDaily()
+interface FileInterface {
+    storeWeatherDataHourly(weather: Weather)
+    readWeatherDataHourly()
     clearOldData()
     checkAccuracy()
 
@@ -66,8 +66,8 @@ class UIClass {
 
 
 class WeatherList {
-    storeWeatherData(weather: Weather)
-    readWeatherData()
+    storeWeatherDataHourly(weather: Weather)
+    readWeatherDataHourly()
     clearOldData()
     checkAccuracy()
 }

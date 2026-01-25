@@ -5,6 +5,7 @@ class Manager(
     private var fetchedWeather: Weather? = null
     private var fetchedLocations: MutableList<Location> = mutableListOf()
     private val weatherCodes: WeatherCode = WeatherCode.SONNIG
+    private var hourlyWeather: MutableList<WeatherList> = mutableListOf()
 
 
     fun getCurrentWeather(location: Location): List<Any> {
@@ -33,12 +34,15 @@ class Manager(
         return locations[choice]
     }
 
-    private fun storeWeather() {
+//    fun storeWeatherData(weather: Weather) : MutableList<Location> {
+//        hourlyWeather = fetchedWeather.getHourlyWeatherDataAll()
+//        return hourlyWeather
+//    }
 
+    private fun storeWeather() {
     }
 
     private fun storeLocation() {
-
     }
 
     }

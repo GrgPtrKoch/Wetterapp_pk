@@ -9,6 +9,8 @@
 
 abstract class WeatherList() : Fileinterface {
 
+//    private val HourlyWeather: MutableList<HourlyWeatherList>)
+
     override fun storeWeatherDataDaily() {
         TODO("Not yet implemented")
     }
