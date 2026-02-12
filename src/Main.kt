@@ -1,3 +1,4 @@
+
 import javafx.application.Application.*
 
 
@@ -10,7 +11,7 @@ import javafx.application.Application.*
 */
 
 fun main(){
-    val weather = Weather(
+   /* val weather = Weather(
         location = Location(0.0, 0.0, "default", "default", "default", "default", 0.0, 0U),
         temperature = 0.0,
         humidity = 0,
@@ -21,7 +22,7 @@ fun main(){
         apparentTemperature = 0.0,
         hourlyList = listOf<HourlyData>(),
         dailyList = listOf<DailyData>()
-    )
+    ) */
 
     //    val favorites = Favorite(
 //        location = Location(0.0, 0.0, "default", "default", "default", "default", 0.0, 0U),
