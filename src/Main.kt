@@ -1,7 +1,4 @@
 import javafx.application.Application.*
-import javafx.scene.image.Image
-import javax.lang.model.type.NullType
-import kotlin.collections.MutableList
 
 
 /*
@@ -13,7 +10,6 @@ import kotlin.collections.MutableList
 */
 
 fun main(){
-
     val weather = Weather(
         location = Location(0.0, 0.0, "default", "default", "default", "default", 0.0, 0U),
         temperature = 0.0,
@@ -26,24 +22,22 @@ fun main(){
         hourlyList = listOf<HourlyData>(),
         dailyList = listOf<DailyData>()
     )
-//    val favorites = Favorite(
+
+    //    val favorites = Favorite(
 //        location = Location(0.0, 0.0, "default", "default", "default", "default", 0.0, 0U),
 //        name = "Default",
 //        temperature = 0.0,
 //        icon =  Image("")
 //        )
 
-    val storage: Storabledata = WeatherData()
-    val hourlyData = weather.getHourlyList()
-    val dailyData = weather.getDailyList()
-
-// Zu Testzwecken Direckausgabe auf Konsole
-    println("Daily: ${storage.storeWeatherDataDaily(weather)}")
-    println("Hourly: ${storage.storeWeatherDataHourly(weather)}")
-    println("Current: ${storage.storeWeatherData(weather)}")
-//    println("Favorite: ${storage.storeFavorites(favorites)}")
-
     launch(Gui::class.java)
+
+    val storage: Storabledata = WeatherData()
+
+    println("Daily: ${storage.readWeatherDataDaily()}")
+    println("Hourly: ${storage.readWeatherDataHourly()}")
+    println("Current: ${storage.readWeatherData()}")
+    println("Favorite: ${storage.readFavorites()}")
 
 //    val myApiHandler = ApiHandler()
 //    val myTest = Manager(myApiHandler)
@@ -51,10 +45,6 @@ fun main(){
 //    val loc = myTest.pickLocation("Wil", 1)
 //    val test = myTest.getCurrentWeather(loc)
 //    println("$test")
-    
-    
-
-
 
 
 }

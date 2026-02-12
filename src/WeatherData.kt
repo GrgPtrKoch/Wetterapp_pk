@@ -18,9 +18,9 @@ class WeatherData() : Storabledata {
     val time = java.time.LocalTime.now()
         .format(DateTimeFormatter.ofPattern("HH:mm:ss"))
 
-    override fun storeWeatherDataDaily(weather: Weather): List<HourlyData> {
+    override fun storeWeatherDataDaily(weather: Weather?): List<HourlyData>? {
         // DataDaily --> 14 days weather forecast$
-        val dailyForecast = weather.getHourlyWeatherDataAll()
+        val dailyForecast = weather?.getHourlyWeatherDataAll()
         println("Getting current weather data...$dailyForecast")
 
         //  Create new directory
@@ -45,8 +45,8 @@ class WeatherData() : Storabledata {
             }
         }
 
-        // Write data in a .txt file
-        val file = File("resources/dailyData/DailyWeatherData$date.txt")
+        // Write data in a .xml file
+        val file = File("resources/dailyData/DailyWeatherData$date.xml")
         val formattedData = dailyForecast .toString()
             .replace("]", "]\n")  // nach jedem ] ein Zeilenumbruch
 
@@ -56,9 +56,9 @@ class WeatherData() : Storabledata {
         return dailyForecast
     }
 
-    override fun storeWeatherDataHourly(weather: Weather): List<Any> {
+    override fun storeWeatherDataHourly(weather: Weather?): List<HourlyData>? {
         // DataHourly --> 24h weather of current day
-        val hourlyData = weather.getHourlyWeatherDataAll()
+        val hourlyData = weather?.getHourlyWeatherDataAll()
         println("Getting current weather data...${hourlyData}Data")
 
         //  Create new directory
@@ -67,8 +67,8 @@ class WeatherData() : Storabledata {
         println("Directory hourlyData exists...")
         println(hourlyDirectory.exists())
 
-        // Write data in a .txt file
-        val file = File("resources/hourlyData/HourlyWeatherData.txt")
+        // Write data in a .xml file
+        val file = File("resources/hourlyData/HourlyWeatherData.xml")
         val formattedData = hourlyData.toString()
             .replace("]", "]\n")  // nach jedem ] ein Zeilenumbruch
 
@@ -78,9 +78,9 @@ class WeatherData() : Storabledata {
         return hourlyData
     }
 
-    override fun storeWeatherData(weather: Weather): List<Any> {
+    override fun storeWeatherData(weather: Weather?): List<Any>? {
         // WeatherData --> current weather, is being rewritten with every search request
-        val currentData = weather.getCurrentWeatherDataAll()
+        val currentData = weather?.getCurrentWeatherDataAll()
         println("Getting current weather data...$currentData")
 
         //  Create new directory
@@ -89,8 +89,8 @@ class WeatherData() : Storabledata {
         println("Directory currentData exists...")
         println(currentDirectory.exists())
 
-        // Write data in a .txt file
-        val file = File("resources/currentData/CurrentWeatherData.txt")
+        // Write data in a .xml file
+        val file = File("resources/currentData/CurrentWeatherData.xml")
         val formattedData = currentData.toString()
             .replace("]", "]\n")  // nach jedem ] ein Zeilenumbruch
 
@@ -101,7 +101,7 @@ class WeatherData() : Storabledata {
     }
 
     override fun storeFavorites(favorites: Favorite): Favorite {
-        val file = File("resources/favoriteLocationData/Favorites.txt")
+        val file = File("resources/favoriteLocationData/Favorites.xml")
         println("Storing favorite: ${favorites.location}")
 
         //  Create new directory
@@ -114,7 +114,7 @@ class WeatherData() : Storabledata {
     }
 
     override fun readWeatherDataDaily() {
-        val file = File("resources/dailyData/DailyWeatherData$date.txt")
+        val file = File("resources/dailyData/DailyWeatherData$date.xml")
 
         val lines = file.readLines()
         for (line in lines) {
@@ -124,7 +124,7 @@ class WeatherData() : Storabledata {
     }
 
     override fun readWeatherDataHourly() {
-        val file = File("resources/hourlyData/HourlyWeatherData.txt")
+        val file = File("resources/hourlyData/HourlyWeatherData.xml")
 
         val lines = file.readLines()
         for (line in lines) {
@@ -133,7 +133,7 @@ class WeatherData() : Storabledata {
     }
 
     override fun readWeatherData() {
-        val file = File("resources/currentData/CurrentWeatherData.txt")
+        val file = File("resources/currentData/CurrentWeatherData.xml")
 
         val lines = file.readLines()
         for (line in lines) {
@@ -142,7 +142,7 @@ class WeatherData() : Storabledata {
     }
 
     override fun readFavorites() {
-        val file = File("resources/favoriteLocationData/Favorites.txt")
+        val file = File("resources/favoriteLocationData/Favorites.xml")
 
         val lines = file.readLines()
         for (line in lines) {
