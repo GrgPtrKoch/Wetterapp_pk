@@ -50,6 +50,11 @@ object plotterLineChart {
         xAxis.label = "Wochentag"
         yAxis.label = "Temperatur [C]"
 
+        // X-Achsen Label gewuenschte Schriftgroesse vorgeben
+        xAxis.lookup(".axis-label").style = "-fx-font-size: 15px; -fx-font-family: 'Helvetica';"
+        // Y-Achsen Label gewuenschte Schriftgroesse vorgeben
+        yAxis.lookup(".axis-label").style = "-fx-font-size: 15px; -fx-font-family: 'Helvetica';"
+
         with(chart) {
             maxHeight = 200.0
             legendSide = Side.LEFT
@@ -63,19 +68,31 @@ object plotterLineChart {
             initialized = true
         }
 
+        // Y-Achse anpassen
+        val weather = Gui.selectedLocationWeather?.getDailyWeatherDataAll()
+        if (weather != null) {
+            val maxTemp = weather.maxOf { it.getTemperatureMax() }
+            val minTemp = weather.minOf { it.getTemperatureMin() }
+
+            yAxis.isAutoRanging = false
+            yAxis.upperBound = maxTemp + 5.0
+            yAxis.lowerBound = minTemp - 5.0
+        }
+
         return chart
     }
 
     fun plot(name: String, value: Int) {
-        when (name) {
-            "Min Temperatur"   -> updateSerie(series[0], value)
-            "Max Temperatur"   -> updateSerie(series[1], value)
+                when (name) {
+            "Max Temperatur"   -> updateSerie(series[0], value)
+            "Min Temperatur"   -> updateSerie(series[1], value)
             else -> println("WARNUNG Plotter: unbekannte Datenserie: $name")
         }
+
     }
     private fun createAllSeries() {
-        createSerie("Höchste\nTemperatur")
-        createSerie("Tiefste\nTemperatur")
+        createSerie("Max Temperatur")
+        createSerie("Min Temperatur")
     }
 
     private fun createSerie(name: String) {
@@ -87,12 +104,30 @@ object plotterLineChart {
 
     private fun updateSerie(serie: Series<String, Number>, value: Int) {
         runLater {
+
             val currentDay = weekDays[dayIndex % 7]
             val data = XYChart.Data<String, Number>(currentDay, value)
+
+            // Ergaenzung um Temperatur-Label als Node setzen (mittels Claude AI erstellt)
+            // von hier
+            val label = javafx.scene.control.Label("${value}°C")
+            label.style = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-opacity: 0.70; -fx-text-fill: ${if (serie == series[0]) "brown" else "black"}; -fx-border-width: 0; -fx-background-color: white;"
+            data.node = label
+            // bis hier
+
             serie.data.add(data)
             if (serie.data.size > MAX_SHOWN_VALUES) {
                 serie.data.removeAt(0)
             }
+
+            // Label nach dem Rendern positionieren (mittels Claude AI erstellt)
+            // von hier
+            data.node?.let { node ->
+                node.translateY = 0.0  // 7px nach oben verschieben
+                node.translateX = 5.0    // 5px nach rechts verschieben
+            }
+            // bis hier
+
 
             // Nur nach dem Update beider Serien zum nächsten Tag
             updateCount++
