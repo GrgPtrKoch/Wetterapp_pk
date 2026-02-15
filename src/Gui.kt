@@ -20,6 +20,7 @@ import javafx.scene.layout.BorderWidths
 import javafx.scene.layout.CornerRadii
 import javafx.scene.layout.FlowPane
 import javafx.scene.layout.HBox
+import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
@@ -39,6 +40,7 @@ import java.time.format.DateTimeFormatter
 //}
 class Gui : Application() {
     private val manager: Logic = Manager()
+    private val favorites: GuiFavorites = GuiFavorites(manager)
     private var locationsModel = FXCollections.observableArrayList<Location>()
     private val resultsList = ListView<Location>().apply {
         prefWidth = 400.0
@@ -46,30 +48,30 @@ class Gui : Application() {
 // Cell-Factory-Code online unter https://openjfx.io/javadoc/12/javafx.controls/javafx/scene/control/Cell.html
 // Damit die Auswahlliste nicht die gesamten Objekt-Informationen anzeigt, sondern einen bestimmten, von uns festgelegten String.
         setCellFactory {
-        object : ListCell<Location>() {
-            init {
-                // Effekt beim Betreten mit der Maus
-                setOnMouseEntered {
-                    if (!isEmpty) {
-                        style = "-fx-background-color: #D6E8FF;"
+            object : ListCell<Location>() {
+                init {
+                    // Effekt beim Betreten mit der Maus
+                    setOnMouseEntered {
+                        if (!isEmpty) {
+                            style = "-fx-background-color: #D6E8FF;"
+                        }
+                    }
+                    // Effekt beim Verlassen mit der Maus
+                    setOnMouseExited {
+                        style = "" // Setzt den Style auf Standard (CSS) zurück
                     }
                 }
-                // Effekt beim Verlassen mit der Maus
-                setOnMouseExited {
-                    style = "" // Setzt den Style auf Standard (CSS) zurück
+                override fun updateItem(item: Location?, empty: Boolean) {
+                    super.updateItem(item, empty)
+                    if (empty || item == null) {
+                        text = null
+                    } else {
+                        text = item.getLocationForSearchResult()
+                        cursor = Cursor.HAND
+                        hoverProperty()
+                    }
                 }
             }
-            override fun updateItem(item: Location?, empty: Boolean) {
-                super.updateItem(item, empty)
-                if (empty || item == null) {
-                    text = null
-                } else {
-                    text = item.getLocationForSearchResult()
-                    cursor = Cursor.HAND
-                    hoverProperty()
-                }
-            }
-        }
         }
     }
 
@@ -77,6 +79,23 @@ class Gui : Application() {
 
     private var selectedLocation: Location? = null
     private var selectedLocationWeather: Weather? = null
+
+    private val onHomeClick = { location: Location ->
+        Gui.selectedLocation = location
+        Gui.selectedLocationWeather = manager.getCurrentWeather(location)
+        fillInLocationData(Gui.selectedLocation)
+        fillInWeatherData(Gui.selectedLocationWeather)
+        searchbar.tflSucheingabe.text = location.getLocationName()
+    }
+
+
+    private val btnAddFavorite = favorites.createAddButton(
+        activeLocation = {Gui.selectedLocation},
+        activeWeather = {Gui.selectedLocationWeather}
+    )
+
+
+
 
     private val lblProzent = Label("98%").apply {
         alignment = Pos.CENTER
@@ -149,16 +168,16 @@ class Gui : Application() {
         hBoxGuete.prefWidthProperty().bind(this.widthProperty().multiply(0.5))
         with(searchbar.btnSuche) {
             onAction = EventHandler { event ->
-            fillSearchResults(searchbar.tflSucheingabe.text)
-            val source = (event.source as Node).scene.window as Stage
-            popupLogic(source)
+                fillSearchResults(searchbar.tflSucheingabe.text)
+                val source = (event.source as Node).scene.window as Stage
+                popupLogic(source)
             }
         }
         with(searchbar.tflSucheingabe) {
             setOnAction { event -> fillSearchResults(this.text)
-            val source = (event.source as Node).scene.window as Stage
-            popupLogic(source)
-        }
+                val source = (event.source as Node).scene.window as Stage
+                popupLogic(source)
+            }
         }
 
         children.addAll(searchbar.getView(), hBoxGuete)
@@ -169,15 +188,58 @@ class Gui : Application() {
         border = Border(BorderStroke(Color.BLUE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths(1.0)))
     }
 
-    private val hBoxDayViewFavorites = HBox().apply {
+    /*  private val hBoxDayViewFavorites = HBox().apply {
+          alignment = Pos.TOP_LEFT
+          padding = Insets(30.0)
+          vBoxFavorites.prefWidthProperty().bind(this.widthProperty().multiply(0.5))
+          dayView.getView().prefWidthProperty().bind(this.widthProperty().multiply(0.50))
+          children.addAll(dayView.getView(), vBoxFavorites)
+      } */
+    /*private val hBoxDayViewFavorites = HBox().apply {
         alignment = Pos.TOP_LEFT
         padding = Insets(30.0)
-        vBoxFavorites.prefWidthProperty().bind(this.widthProperty().multiply(0.5))
-        dayView.getView().prefWidthProperty().bind(this.widthProperty().multiply(0.50))
-        children.addAll(dayView.getView(), vBoxFavorites)
+        // vBoxFavorites.prefWidthProperty().bind(this.widthProperty().multiply(0.5))
+        //hBoxDayView.prefWidthProperty().bind(this.widthProperty().multiply(0.50))
+        //children.addAll(hBoxDayView,favorites.createFavoriteBox(manager, onHomeClick))
+        val favBox = favorites.createFavoriteBox(manager, onHomeClick)
+        favBox.maxHeight = 100.0
+        HBox.setMargin(favBox, Insets(0.0,0.0,0.0,100.0))
+        children.addAll(dayView.hBoxDayView,favBox)
+    } */
+    private val hBoxDayViewFavorites by lazy {
+        HBox().apply {
+            alignment = Pos.TOP_LEFT
+            padding = Insets(30.0)
+            isFillHeight = false
+            val favBox = favorites.createFavoriteBox(manager, onHomeClick)
+            favBox.apply {
+                // Hier begrenzen wir die Höhe der Favoritenliste, damit sie nicht nach unten wächst
+                maxWidth = 350.0
+                maxHeight = 100.0
+                maxHeightProperty().bind(dayView.hBoxDayView.heightProperty())
+
+                alignment = Pos.TOP_CENTER
+                VBox.setVgrow(this, Priority.NEVER)
+            }
+            HBox.setHgrow(dayView.hBoxDayView, Priority.ALWAYS)
+
+            HBox.setMargin(favBox, Insets(0.0, 0.0, 0.0, 100.0))
+            children.addAll(dayView.hBoxDayView, favBox)
+        }
     }
 
     override fun start(stage: Stage) {
+
+        dayView.favorites = favorites
+        dayView.addFavoriteButtonToBox()
+
+        favorites.updateFavoritesList(onHomeClick)
+
+        manager.getFavoritesObservableList().addListener(javafx.collections.ListChangeListener{
+            favorites.updateFavoritesList(onHomeClick)
+        })
+
+
         val root = BorderPane().apply {
             top = hBoxSucheGuete
             bottom = hBoxBottom
@@ -209,17 +271,17 @@ class Gui : Application() {
         }
         resultsList.selectionModel.selectedItemProperty().addListener { observable, oldValue, newValue ->
             if (newValue != null) {
-                selectedLocation = newValue
-                selectedLocationWeather = manager.getCurrentWeather(newValue)
-                fillInLocationData(selectedLocation)
-                fillInWeatherData(selectedLocationWeather)
+                Gui.selectedLocation = newValue
+                Gui.selectedLocationWeather = manager.getCurrentWeather(newValue)
+                fillInLocationData(Gui.selectedLocation)
+                fillInWeatherData(Gui.selectedLocationWeather)
                 // Create and refresh the current weather file in "currentData"
                 val storage: Storabledata = WeatherData()
-                println("Current: ${storage.storeWeatherData(selectedLocationWeather)}")
+                println("Current: ${storage.storeWeatherData(Gui.selectedLocationWeather)}")
 
                 // For Test purposes only safe the hourly and daily weather as well
-                println("Daily: ${storage.storeWeatherDataDaily(selectedLocationWeather)}")
-                println("Hourly: ${storage.storeWeatherDataHourly(selectedLocationWeather)}")
+                println("Daily: ${storage.storeWeatherDataDaily(Gui.selectedLocationWeather)}")
+                println("Hourly: ${storage.storeWeatherDataHourly(Gui.selectedLocationWeather)}")
 
                 popupStage.close()
             }
@@ -241,7 +303,7 @@ class Gui : Application() {
         popupStage.showAndWait()
     }
     private fun fillInLocationData(location: Location?) {
-        dayView.lblLocation.text = selectedLocation?.getLocationName()
+        dayView.lblLocation.text = Gui.selectedLocation?.getLocationName()
         if (location != null) {
             dayView.pinPosition(dayView.calculatePosition(location.getLatitude(), location.getLongitude()))
         }
@@ -261,7 +323,8 @@ class Gui : Application() {
                 weather.getDailyList().get(0).getSunset()}"
             dayView.lblUpdateTime.text = "aktualisiert um: ${LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))} Uhr"
         }
-        dayView.btnSetFavorite.isVisible = true
+        favorites.updateStarColor(Gui.selectedLocation)
+        dayView.btnAddFavorite.isVisible = true
     }
 
     fun fillSearchResults(string: String) {
@@ -271,5 +334,10 @@ class Gui : Application() {
             locationsModel.add(result)
         }
     }
+    companion object {
+        var selectedLocation: Location? = null
+        var selectedLocationWeather: Weather? = null
+    }
+
 
 }
