@@ -25,8 +25,9 @@ data class WeatherData(
     var longitude: Double = 0.0,
     var id: Int = 0,
     var temperature: Double = 0.0,
+    //var temperatureMaxHistory: MutableList<Double> = mutableListOf(),
+    //var temperatureMinHistory: MutableList<Double> = mutableListOf(),
     var weatherCode: Int = 0) : Storabledata {
-
 
     // supply Date and time on the first line in the data file
     val date = java.time.LocalDate.now()
@@ -125,6 +126,7 @@ data class WeatherData(
                 weather.longitude,
                 weather.locationID.toInt(),
                 weather.getTemperature(),
+
                 weather.getWeatherCode().code
             )
             val file = getStorageFile()
@@ -139,7 +141,7 @@ data class WeatherData(
                     FileOutputStream(file)
                 )
             )
-            encoder.writeObject(history)             // Objekt speichern
+            encoder.writeObject(history)            // Objekt speichern
             encoder.close()                         // Stream schliessen
         }
     }
@@ -157,18 +159,30 @@ data class WeatherData(
     }
 
     private fun loadHistory(file: File): FileWrapper {
-        return try {
+        try {
             val decoder = XMLDecoder(
                 BufferedInputStream(
                     FileInputStream(file)))
-            decoder.readObject() as FileWrapper
-        } catch (_: Exception) {
-            FileWrapper()
+
+            val storedObject = decoder.readObject() as FileWrapper
+            return storedObject
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
+        return FileWrapper()
+    }
+
+    override fun getHistoryForLocation(locationID: Int): List<WeatherData> {
+        val file = getStorageFile()
+        if (!file.exists()) { return emptyList() }
+
+        val history = loadHistory(file)
+        print("History des gesuchten Orts: ${history.dataList.filter { it.id == locationID }}")
+        return history.dataList.filter { it.id == locationID }
     }
 
     override fun storeFavorites(favorites: Favorite): Favorite {
-        val file = File("resources/favoriteLocationData/Favorites.xml")
+        val file = File("resources/favoriteLocationData/Favorites.txt")
         println("Storing favorite: ${favorites.location}")
 
         //  Create new directory
@@ -181,7 +195,7 @@ data class WeatherData(
     }
 
     override fun readWeatherDataDaily() {
-        val file = File("resources/dailyData/DailyWeatherData$date.xml")
+        val file = File("resources/dailyData/DailyWeatherData$date.txt")
 
         val lines = file.readLines()
         for (line in lines) {

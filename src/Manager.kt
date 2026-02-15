@@ -22,8 +22,15 @@ class Manager() : Logic {
         return fetchedLocations
     }
 
-    override fun getCurrentWeather(from: Location): Weather? {
-        fetchedWeather = apiHandler.fetchWeather(from)
+    override fun getCurrentWeather(location: Location): Weather? {
+        fetchedWeather = apiHandler.fetchWeather(location)
+        if (fetchedWeather != null){
+
+            //fileHandler.getHistoryForLocation(from.getLocationID().toInt())
+
+            // prüfen ob Ort in Favoriten? Wenn ja: Wetterabfrage im Speicher speichern.
+            fileHandler.storeData(fetchedWeather)
+        }
         return fetchedWeather
     }
 

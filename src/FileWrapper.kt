@@ -1,3 +1,4 @@
-class FileWrapper {
-    var dataList: MutableList<WeatherData> = mutableListOf()
+class FileWrapper(
+    var dataList: MutableList<WeatherData> = mutableListOf()) {
+
 }
