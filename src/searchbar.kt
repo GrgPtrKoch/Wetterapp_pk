@@ -1,4 +1,3 @@
-import javafx.event.EventHandler
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.Cursor
@@ -7,7 +6,6 @@ import javafx.scene.control.TextField
 import javafx.scene.effect.InnerShadow
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
-import javafx.stage.Stage
 
 object searchbar {
 

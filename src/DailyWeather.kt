@@ -2,7 +2,7 @@ import javafx.scene.image.Image
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-data class DailyData(
+data class DailyWeather(
     private val time: LocalDate,
     private val temperatureMin: Double,
     private val temperatureMax: Double,
@@ -28,9 +28,6 @@ data class DailyData(
 
     val weatherCodeIcon: Image
         get() = weatherCode.icon
-
-
-
 
     fun get(): List<Any> {
         return listOf(time, temperatureMin, temperatureMax, apparentTemperatureMin, apparentTemperatureMax, sunset, sunrise,  "${weatherCodeNumber}${weatherCodeDescription}${weatherCodeIcon}")

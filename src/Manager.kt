@@ -1,13 +1,18 @@
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.scene.image.Image
+import java.util.logging.FileHandler
 import kotlin.String
 
 class Manager() : Logic {
     private val apiHandler: Api = ApiHandler()
     private var fetchedWeather: Weather? = null
     private var fetchedLocations: MutableList<Location> = mutableListOf()
+//    private val weatherCodes: WeatherCode = WeatherCode.SONNIG
+    private var hourlyWeather: MutableList<WeatherData> = mutableListOf()
+    //private var favoritesList: MutableList<Favorite> = mutableListOf()
     private val favoritesList: ObservableList<Favorite> = FXCollections.observableArrayList()
+    private val fileHandler: Storabledata = WeatherData()
 
 
     //    fun getCurrentWeather(location: Location): List<Any> {
@@ -19,14 +24,19 @@ class Manager() : Logic {
         return fetchedLocations
     }
 
-    override fun getCurrentWeather(from: Location): Weather? {
-        fetchedWeather = apiHandler.fetchWeather(from)
+    override fun getCurrentWeather(location: Location): Weather? {
+        fetchedWeather = apiHandler.fetchWeather(location)
+        if (fetchedWeather != null){
+
+            //fileHandler.getHistoryForLocation(from.getLocationID().toInt())
+
+            // prüfen ob Ort in Favoriten? Wenn ja: Wetterabfrage im Speicher speichern.
+            fileHandler.storeData(fetchedWeather)
+        }
         return fetchedWeather
     }
 
-
     override fun getFavoritesObservableList(): ObservableList<Favorite> = favoritesList
-
 
     override fun addFavorites(location: Location, weather: Weather): Boolean {
         if (favoritesList.size < 5 && !checkForFavorites(location)) {

@@ -7,7 +7,6 @@ import java.net.URLEncoder
 import org.json.JSONObject
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 
 class ApiHandler() : Api {
 
@@ -57,7 +56,7 @@ class ApiHandler() : Api {
                 val windDirection = currentObj.optInt("wind_direction_10m", 0)
                 val apparentTemperature = currentObj.optDouble("apparent_temperature", 0.0)
 
-                val hourlyList = mutableListOf<HourlyData>()
+                val hourlyList = mutableListOf<HourlyWeather>()
                 // Werte aus "hourly"-Objekt extrahieren:
                 val hourlyTimes = hourlyObj.optJSONArray("time")
                 if (hourlyTimes != null) {
@@ -69,7 +68,7 @@ class ApiHandler() : Api {
                         } else {
                             LocalDateTime.now()
                         }
-                        hourlyList.add(HourlyData(
+                        hourlyList.add(HourlyWeather(
                             times = time,
                             temperature2M = hourlyObj.optJSONArray("temperature_2m")?.optDouble(i) ?: 0.0,
                             relativeHumidity2M = hourlyObj.optJSONArray("relative_humidity_2m")?.optInt(i) ?: 0,
@@ -86,11 +85,10 @@ class ApiHandler() : Api {
                     }
                 }
 
-                val dailyList = mutableListOf<DailyData>()
+                val dailyList = mutableListOf<DailyWeather>()
                 // Werte aus "daily"-Objekt extrahieren:
                 val dailyTimes = dailyObj.optJSONArray("time")
                 if (dailyTimes != null) {
-
 
                     for (i in 0 until dailyTimes.length()) {
                         //Datum sicher parsen:
@@ -98,7 +96,7 @@ class ApiHandler() : Api {
                         val date = if (dateString.isNotEmpty()) {
                             try { LocalDate.parse(dateString) } catch (e: Exception) { LocalDate.now() }
                         } else { LocalDate.now() }
-                    dailyList.add(DailyData(
+                    dailyList.add(DailyWeather(
                         time = date,
                         temperatureMin = dailyObj.optJSONArray("temperature_2m_min")?.optDouble(i) ?: 0.0,
                         temperatureMax = dailyObj.optJSONArray("temperature_2m_max")?.optDouble(i) ?: 0.0,
@@ -129,7 +127,7 @@ class ApiHandler() : Api {
     override fun getLocations(searchText: String) : MutableList<Location> {
         val results = mutableListOf<Location>()
         val text = URLEncoder.encode(searchText, "UTF-8")
-        val apiUrl = "https://geocoding-api.open-meteo.com/v1/search?name=$text&count=10&language=de&format=json&countryCode=CH"
+        val apiUrl = "https://geocoding-api.open-meteo.com/v1/search?name=$text&count=20&language=de&format=json&countryCode=CH"
 
         try {
 
@@ -143,7 +141,7 @@ class ApiHandler() : Api {
             val responseCode: Int = connection.responseCode     // 200 = HTTP_OK: Abruf funktioniert
 
             if (responseCode == HttpURLConnection.HTTP_OK) {
-                // Read and print the response data
+                // Read the response data
                 val reader = BufferedReader(InputStreamReader(connection.inputStream))
                 var line: String?
                 val response = StringBuilder()
@@ -184,7 +182,6 @@ class ApiHandler() : Api {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        println(results)
         return results
     }
 
