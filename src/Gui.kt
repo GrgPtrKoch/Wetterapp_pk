@@ -265,6 +265,7 @@ class Gui : Application() {
         popupStage.scene = Scene(resultsBox, 400.0, 500.0)
         popupStage.showAndWait()
     }
+
     private fun fillInLocationData(location: Location?) {
         dayView.lblLocation.text = Gui.selectedLocation?.getLocationName()
         if (location != null) {
