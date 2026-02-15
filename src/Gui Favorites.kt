@@ -20,12 +20,14 @@ import javafx.scene.shape.StrokeLineJoin
 import javafx.scene.text.Font
 import javafx.scene.text.FontWeight
 import javafx.stage.Stage
+import kotlin.apply
+import kotlin.collections.forEach
 
 class GuiFavorites (private val manager:Logic) {
     private val favoriteConstruct = VBox(5.0).apply {
         alignment = Pos.TOP_CENTER
         isFillWidth = true
-        maxHeight = 350.0
+        maxHeight = 250.0
 
     }
 
@@ -62,7 +64,7 @@ class GuiFavorites (private val manager:Logic) {
 
             children.addAll(ttlFavorites, favoriteConstruct, lblCount)
         }
-        manager.getFavoritesObservableList().addListener(javafx.collections.ListChangeListener {
+        manager.getFavoritesObservableList().addListener(ListChangeListener {
             updateFavoritesList(onHomeClick)
         })
         updateFavoritesList(onHomeClick)
@@ -80,7 +82,7 @@ class GuiFavorites (private val manager:Logic) {
 
             val locationName = Label(favorite.name).apply {
                 font = Font.font("Outfit", FontWeight.LIGHT, 16.0)
-                minWidth = 100.0
+                minWidth = 120.0
                 isWrapText = false
             }
 
@@ -93,7 +95,7 @@ class GuiFavorites (private val manager:Logic) {
             }
 
             val lblWeatherIcon = ImageView(favorite.icon).apply {
-                fitWidth = 50.0
+                fitWidth = 30.0
                 isPreserveRatio = true
                 isSmooth = true
                 isCache = true

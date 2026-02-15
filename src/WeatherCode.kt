@@ -13,11 +13,11 @@ private fun loadIcon(fileName : String): Image {
 }
 
 enum class WeatherCodes(
-                        val code: Int,
-                        val description: String,
-                        val icon: Image) {
+    val code: Int,
+    val description: String,
+    val icon: Image) {
 
-    SONNIG(0,"Sonne", loadIcon("sunny.png")),
+    SONNIG(0, "Sonne", loadIcon("sunny.png")),
     LEICHT_BEWOELKT(1, "leicht bewölkt", loadIcon("partly_cloudy.png")),
     BEWOELKT(3, "Bewölkt", loadIcon("cloudy.png")),
     NEBEL(40, "Nebel", loadIcon("fog.png")),
@@ -26,7 +26,6 @@ enum class WeatherCodes(
     SCHNEE(70, "Schnee", loadIcon("snow.png")),
     GEWITTER(90, "Gewitter", loadIcon("thunderstorm.png")),
     UNBEKANNT(-1, "Unbekannt", loadIcon("unknown.png"));
-
 
 
     companion object {
@@ -48,4 +47,5 @@ enum class WeatherCodes(
             }
         }
 
+    }
 }
