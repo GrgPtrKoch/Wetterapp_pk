@@ -1,6 +1,7 @@
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.scene.image.Image
+import java.util.logging.FileHandler
 import kotlin.String
 
 class Manager() : Logic {
@@ -11,6 +12,7 @@ class Manager() : Logic {
     private var hourlyWeather: MutableList<WeatherData> = mutableListOf()
     //private var favoritesList: MutableList<Favorite> = mutableListOf()
     private val favoritesList: ObservableList<Favorite> = FXCollections.observableArrayList()
+    private val fileHandler: Storabledata = WeatherData()
 
 
     //    fun getCurrentWeather(location: Location): List<Any> {
@@ -34,9 +36,7 @@ class Manager() : Logic {
         return fetchedWeather
     }
 
-
     override fun getFavoritesObservableList(): ObservableList<Favorite> = favoritesList
-
 
     override fun addFavorites(location: Location, weather: Weather): Boolean {
         if (favoritesList.size < 5 && !checkForFavorites(location)) {
