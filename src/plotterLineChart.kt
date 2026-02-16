@@ -112,7 +112,7 @@ object plotterLineChart {
             // Ergaenzung um Temperatur-Label als Node setzen (mittels Claude AI erstellt)
             // von hier
             val label = javafx.scene.control.Label("${value}°C")
-            label.style = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-opacity: 0.70; -fx-text-fill: ${if (serie == series[0]) "brown" else "black"}; -fx-border-width: 0; -fx-background-color: white;"
+            label.style = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-opacity: 0.65; -fx-text-fill: ${if (serie == series[0]) "brown" else "black"}; -fx-border-width: 0; -fx-background-color: white;"
             data.node = label
             // bis hier
 
