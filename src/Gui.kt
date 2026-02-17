@@ -95,11 +95,9 @@ class Gui : Application() {
     private val hBoxBottom = HBox().apply {
         alignment = Pos.CENTER
         padding = Insets(30.0)
-
         detailsView.getView().prefWidthProperty().bind(this.widthProperty().multiply(0.4))
         plotterLineChart.getView().prefWidthProperty().bind(this.widthProperty().multiply(0.6))
         children.addAll(detailsView.getView(), plotterLineChart.getView())
-
     }
 
     private val lblGuete = Label("Güte der Vorhersage").apply {
@@ -116,9 +114,13 @@ class Gui : Application() {
         alignment = Pos.CENTER_LEFT
         spacing = 8.0
         padding = Insets(30.0)
-//        HBox.setHgrow(searchbar.getView(), Priority.ALWAYS)
-//        HBox.setHgrow(hBoxGuete, Priority.ALWAYS)
+        // Breite der Sucheingabe = Breite der Detailsansicht (Haarlinie)
+        searchbar.tflSucheingabe.prefWidthProperty().bind(detailsView.getView().widthProperty().subtract(45.0))
         hBoxGuete.prefWidthProperty().bind(this.widthProperty().multiply(0.5))
+        searchbar.tflSucheingabe.minWidthProperty().bind(searchbar.tflSucheingabe.prefWidthProperty())
+        searchbar.tflSucheingabe.maxWidthProperty().bind(searchbar.tflSucheingabe.prefWidthProperty())
+        //border = Border(BorderStroke(Color.BLUE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths(1.0)))
+
         with(searchbar.btnSuche) {
             onAction = EventHandler { event ->
                 fillSearchResults(searchbar.tflSucheingabe.text)
@@ -126,6 +128,7 @@ class Gui : Application() {
                 popupLogic(source)
             }
         }
+
         with(searchbar.tflSucheingabe) {
             setOnAction { event -> fillSearchResults(this.text)
                 val source = (event.source as Node).scene.window as Stage
@@ -135,29 +138,11 @@ class Gui : Application() {
         children.addAll(searchbar.getView(), hBoxGuete)
     }
 
-    private val vBoxFavorites = VBox().apply {
-        alignment = Pos.TOP_RIGHT
-        border = Border(BorderStroke(Color.BLUE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths(1.0)))
-    }
+//    private val vBoxFavorites = VBox().apply {
+//        alignment = Pos.TOP_RIGHT
+//        border = Border(BorderStroke(Color.BLUE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths(1.0)))
+//    }
 
-    /*  private val hBoxDayViewFavorites = HBox().apply {
-          alignment = Pos.TOP_LEFT
-          padding = Insets(30.0)
-          vBoxFavorites.prefWidthProperty().bind(this.widthProperty().multiply(0.5))
-          dayView.getView().prefWidthProperty().bind(this.widthProperty().multiply(0.50))
-          children.addAll(dayView.getView(), vBoxFavorites)
-      } */
-    /*private val hBoxDayViewFavorites = HBox().apply {
-        alignment = Pos.TOP_LEFT
-        padding = Insets(30.0)
-        // vBoxFavorites.prefWidthProperty().bind(this.widthProperty().multiply(0.5))
-        //hBoxDayView.prefWidthProperty().bind(this.widthProperty().multiply(0.50))
-        //children.addAll(hBoxDayView,favorites.createFavoriteBox(manager, onHomeClick))
-        val favBox = favorites.createFavoriteBox(manager, onHomeClick)
-        favBox.maxHeight = 100.0
-        HBox.setMargin(favBox, Insets(0.0,0.0,0.0,100.0))
-        children.addAll(dayView.hBoxDayView,favBox)
-    } */
     private val hBoxDayViewFavorites by lazy {
         HBox().apply {
             alignment = Pos.TOP_LEFT
@@ -172,7 +157,9 @@ class Gui : Application() {
                 VBox.setVgrow(this, Priority.NEVER)
             }
             HBox.setHgrow(dayView.hBoxDayView, Priority.ALWAYS)
-
+            HBox.setHgrow(favBox, Priority.ALWAYS)
+            dayView.hBoxDayView.maxWidthProperty().bind(this.widthProperty().multiply(0.5))
+            favBox.maxWidthProperty().bind(this.widthProperty().multiply(0.5))
             HBox.setMargin(favBox, Insets(0.0, 0.0, 0.0, 100.0))
             children.addAll(dayView.hBoxDayView, favBox)
         }
@@ -229,14 +216,11 @@ class Gui : Application() {
                 Gui.selectedLocationWeather = manager.getCurrentWeather(newValue)
                 fillInLocationData(Gui.selectedLocation)
                 fillInWeatherData(Gui.selectedLocationWeather)
+
                 // Create and refresh the current weather file in "currentData"
                 val storage: Storabledata = WeatherData()
                 println("Current: ${storage.storeWeatherData(Gui.selectedLocationWeather)}")
 
-//                // Create and refresh the current weather file in "currentData"
-//                val storage: Storabledata = WeatherData()
-//                println("Current: ${storage.storeWeatherData(selectedLocationWeather)}")
-//
 //                // For Test purposes only safe the hourly and daily weather as well
 //                println("Daily: ${storage.storeWeatherDataDaily(selectedLocationWeather)}")
 //                println("Hourly: ${storage.storeWeatherDataHourly(selectedLocationWeather)}")
@@ -273,8 +257,8 @@ class Gui : Application() {
         if (weather != null) {
             dayView.lblWeatherCode.text = weather.getWeatherCode().description
             dayView.lblTemperature.text = "${weather.getTemperature().toInt()}º"
-            dayView.lblMaxTemperature.text = "${weather.getDailyList()[0].getTemperatureMax()}"
-            dayView.lblMinTemperature.text = "${weather.getDailyList()[0].getTemperatureMin()}"
+            dayView.lblMaxTemperature.text = "${round(weather.getDailyList()[0].getTemperatureMax()).toInt()}º"
+            dayView.lblMinTemperature.text = "${round(weather.getDailyList()[0].getTemperatureMin()).toInt()}º"
 
             detailsView.lblHumidityValue.text = "${weather.getHumidity()}%"
             detailsView.lblPrecipitationValue.text = "${weather.getPrecipitation()} mm"
@@ -285,15 +269,16 @@ class Gui : Application() {
             detailsView.lblApparentTemperatureValue.text = "${round(weather.getApparentTemperature()).toInt()}º"
 
             dayView.lblUpdateTime.text = "aktualisiert um: ${LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))} Uhr"
+            // API-Daten neu laden für Plotter Line Chart und erste 7 Werte auslesen
+            weather.getDailyWeatherDataAll().take(7).forEach { day ->
+                plot("Max Temperatur", day.getTemperatureMax().toInt())
+                plot("Min Temperatur", day.getTemperatureMin().toInt())
+            }
         }
         guiFavorites.updateStarColor(Gui.selectedLocation)
         dayView.btnAddFavorite.isVisible = true
 
-        // API-Daten neu laden für Plotter Line Chart und erste 7 Werte auslesen
-        weather?.getDailyWeatherDataAll()?.take(7)?.forEach { day ->
-            plot("Max Temperatur", day.getTemperatureMax().toInt())
-            plot("Min Temperatur", day.getTemperatureMin().toInt())
-        }
+
     }
 
     fun fillSearchResults(string: String) {
