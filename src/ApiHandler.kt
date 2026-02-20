@@ -45,12 +45,27 @@ class ApiHandler() : Api {
                 val currentObj = responseText.getJSONObject("current")
                 val hourlyObj = responseText.getJSONObject("hourly")
                 val dailyObj = responseText.getJSONObject("daily")
+// Sonnenzeiten für Weatercode extrahieren
+                val sunriseStr = dailyObj.getJSONArray("sunrise").optString(0)
+                val sunsetStr = dailyObj.getJSONArray("sunset").optString(0)
+
+// Objekt erstellen für Sonnenzeiten Check
+                val simpleDailyWeather = DailyWeather(
+                    time = LocalDate.now(),
+                    temperatureMin = 0.0,
+                    temperatureMax = 0.0,
+                    apparentTemperatureMin = 0.0,
+                    apparentTemperatureMax = 0.0,
+                    sunrise = parseDateTimeSafely(sunriseStr),
+                    sunset = parseDateTimeSafely(sunsetStr),
+                    weatherCode = WeatherCodes.UNBEKANNT
+                )
 
 // Werte aus "current"-Objekt extrahieren:
                 val temperature = currentObj.optDouble("temperature_2m", 0.0)
                 val humidity = currentObj.optInt("relative_humidity_2m", 0)
                 val weatherCodeInt = currentObj.optInt("weather_code", 0)
-                val weatherCode = WeatherCodes.fromCode(weatherCodeInt)
+                val weatherCode = WeatherCodes.fromCode(weatherCodeInt,simpleDailyWeather)
                 val precipitation = currentObj.optInt("precipitation", 0)
                 val windSpeed = currentObj.optInt("wind_speed_10m", 0)
                 val windDirection = currentObj.optInt("wind_direction_10m", 0)
@@ -68,6 +83,8 @@ class ApiHandler() : Api {
                         } else {
                             LocalDateTime.now()
                         }
+                        val hourlyWeatherCode = hourlyObj.optJSONArray("weather_code")?.optInt(i)?:0
+
                         hourlyList.add(HourlyWeather(
                             times = time,
                             temperature2M = hourlyObj.optJSONArray("temperature_2m")?.optDouble(i) ?: 0.0,
@@ -77,9 +94,7 @@ class ApiHandler() : Api {
                             windSpeed = hourlyObj.optJSONArray("wind_speed_10m")?.optDouble(i) ?: 0.0,
                             windDirection = hourlyObj.optJSONArray("wind_direction_10m")?.optInt(i) ?: 0,
                             //weatherCode = hourlyWeatherCode.optInt(i),
-                            weatherCode = WeatherCodes.fromCode(
-                                hourlyObj.optJSONArray("weather_code")?.optInt(i) ?: 0
-                            ),
+                            weatherCode = WeatherCodes.fromCode(hourlyWeatherCode,simpleDailyWeather),
                             freezingLevel = hourlyObj.optJSONArray("freezing_level_height")?.optDouble(i) ?: 0.0))
                             //snowfallLevel = hourlySnowfallHeight.optDouble(i)
                     }
@@ -96,6 +111,9 @@ class ApiHandler() : Api {
                         val date = if (dateString.isNotEmpty()) {
                             try { LocalDate.parse(dateString) } catch (e: Exception) { LocalDate.now() }
                         } else { LocalDate.now() }
+
+                        val dailyWeatherCode = dailyObj.optJSONArray("weather_code")?.optInt(i) ?: 0
+
                     dailyList.add(DailyWeather(
                         time = date,
                         temperatureMin = dailyObj.optJSONArray("temperature_2m_min")?.optDouble(i) ?: 0.0,
@@ -104,9 +122,7 @@ class ApiHandler() : Api {
                         apparentTemperatureMax = dailyObj.optJSONArray("apparent_temperature_max")?.optDouble(i) ?: 0.0,
                         sunrise = parseDateTimeSafely(dailyObj.optJSONArray("sunrise")?.optString(i)),
                         sunset = parseDateTimeSafely(dailyObj.optJSONArray("sunset")?.optString(i)),
-                        weatherCode = WeatherCodes.fromCode(
-                            dailyObj.optJSONArray("weather_code")?.optInt(i) ?: 0
-                        )
+                        weatherCode = WeatherCodes.fromCode(dailyWeatherCode,simpleDailyWeather)
                     ))
                     }
                 }

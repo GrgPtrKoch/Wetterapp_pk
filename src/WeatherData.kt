@@ -182,7 +182,7 @@ data class WeatherData(
         return history.dataList.filter { it.id == locationID }
     }
 
-    override fun storeFavorites(favorites: Favorite): Favorite {
+  /*  override fun storeFavorites(favorites: Favorite): Favorite {
         val file = File("resources/favoriteLocationData/Favorites.txt")
         println("Storing favorite: ${favorites.location}")
 
@@ -193,6 +193,10 @@ data class WeatherData(
         println(favoritesDirectory.exists())
 
         return favorites
+    } */
+
+    override fun storeFavorites(favorites: Favorite): Favorite {
+        TODO("Not yet implemented")
     }
 
     override fun readWeatherDataDaily() {
