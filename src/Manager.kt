@@ -1,8 +1,8 @@
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
-import javafx.scene.image.Image
+
 import java.io.File
-import java.util.logging.FileHandler
+
 import kotlin.String
 
 class Manager() : Logic {
@@ -52,9 +52,9 @@ class Manager() : Logic {
         if (favoritesList.size < 5 && !checkForFavorites(location)) {
             val favorite = Favorite(
                 location,
-                location.getName(),
+                location.name,
                 weather.getTemperature(),
-                weather.getWeatherCode().icon)
+                weather.getWeatherCode().iconName)
 
             val success = favoritesList.add(favorite)
 
@@ -68,7 +68,7 @@ class Manager() : Logic {
     }
 
     override fun removeFavorites(location: Location): Boolean {
-        val removeFavorite = favoritesList.removeIf { it.location.getLocationID() == location.getLocationID() }
+        val removeFavorite = favoritesList.removeIf { it.location.id == location.id }
         if (removeFavorite) {
             updateFavoriteFile()
             println("Favorit wurde entfernt und XMl Datei aktualisiert")
@@ -88,7 +88,7 @@ class Manager() : Logic {
 
     override fun checkForFavorites(location: Location): Boolean {
         return favoritesList.any {
-            it.location.getLocationID() == location.getLocationID()
+            it.location.id == location.id
         }
     }
 }

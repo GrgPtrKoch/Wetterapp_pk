@@ -26,16 +26,16 @@ data class Weather(
         get() = temperature
 
     val locationName: String
-        get() = location.getName()
+        get() = location.name
 
     val latitude: Double
-        get() = location.getLatitude()
+        get() = location.latitude
 
     val longitude: Double
-        get() = location.getLongitude()
+        get() = location.longitude
 
-    val locationID: UInt
-        get() = location.getLocationID()
+    val locationID: Int
+        get() = location.id
 
     val weatherList : List<Any>
         get() = getCurrentWeatherDataAll()

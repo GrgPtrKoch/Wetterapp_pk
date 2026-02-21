@@ -1,9 +1,9 @@
 import javafx.scene.image.Image
 import java.time.LocalDateTime
-import java.time.LocalTime
 
 
-private fun loadIcon(fileName : String): Image {
+
+fun loadIcon(fileName : String): Image {
     val path = "/icons/weatherIcons/$fileName"
     val resource = WeatherCodes::class.java.getResourceAsStream(path)
 
@@ -18,34 +18,35 @@ private fun loadIcon(fileName : String): Image {
 enum class WeatherCodes(
     val code: Int,
     val description: String,
-    val icon: Image) {
+    val iconName: String) {
 
-    SONNIG(0, "sonnig", loadIcon("Sonnig.png")),
-    LEICHT_BEWOELKT(1, "leicht bewölkt", loadIcon("leichtbewölkt.png")),
-    BEWOELKT(3, "bewölkt", loadIcon("bewölkt.png")),
-    NEBEL(40, "Nebel", loadIcon("Nebel.png")),
-    LEICHTER_REGEN(50, "leichter Regen", loadIcon("leichterRegen.png")),
-    REGEN(60, "Regen", loadIcon("Regen.png")),
-    SCHNEE(70, "Schnee", loadIcon("Schnee.png")),
-    GEWITTER(91, "Gewitter", loadIcon("Gewitter.png")),
+    SONNIG(0, "sonnig", "Sonnig.png"),
+    LEICHT_BEWOELKT(1, "leicht bewölkt", "leichtbewölkt.png"),
+    BEWOELKT(3, "bewölkt", "bewölkt.png"),
+    NEBEL(40, "Nebel", "Nebel.png"),
+    LEICHTER_REGEN(50, "leichter Regen", "leichterRegen.png"),
+    REGEN(60, "Regen", "Regen.png"),
+    SCHNEE(70, "Schnee", "Schnee.png"),
+    GEWITTER(91, "Gewitter", "Gewitter.png"),
 
-    KLAR(100, "klar", loadIcon("klarNacht.png")),
-    LEICHT_BEWOELKT_NACHT(101, "leicht bewölkt", loadIcon("leichtbewölktNacht.png")),
-    BEWOELKT_NACHT(103, "bewölkt", loadIcon("bewölkt.png")),
-    NEBEL_NACHT(140, "Nebel", loadIcon("Nebel.png")),
-    LEICHTER_REGEN_NACHT(150, "leichter Regen", loadIcon("leichterRegen.png")),
-    REGEN_NACHT(160, "Regen", loadIcon("Regen.png")),
-    SCHNEE_NACHT(170, "Schnee", loadIcon("Schnee.png")),
-    GEWITTER_NACHT(191, "Gewitter", loadIcon("Gewitter.png")),
+    KLAR(100, "klar", "klarNacht.png"),
+    LEICHT_BEWOELKT_NACHT(101, "leicht bewölkt", "leichtbewölktNacht.png"),
+    BEWOELKT_NACHT(103, "bewölkt", "bewölkt.png"),
+    NEBEL_NACHT(140, "Nebel", "Nebel.png"),
+    LEICHTER_REGEN_NACHT(150, "leichter Regen", "leichterRegen.png"),
+    REGEN_NACHT(160, "Regen", "Regen.png"),
+    SCHNEE_NACHT(170, "Schnee", "Schnee.png"),
+    GEWITTER_NACHT(191, "Gewitter", "Gewitter.png"),
 
-    UNBEKANNT(-1, "Unbekannt", loadIcon("umbrella.png"));
+    UNBEKANNT(-1, "Unbekannt", "umbrella.png");
 
+   //val icon: Image get() = loadIcon(iconName)
 
     companion object {
         fun fromCode(code: Int, weather: DailyWeather): WeatherCodes {
             var weatherCode = code
 
-            if (weather != null) {
+           // if (weather != null) {
                 val currentTime = LocalDateTime.now() //.format(DateTimeFormatter.ofPattern("HH:/mm"))
                 val sunrise = weather.getSunriseLocalDateTime()
                 val sunset = weather.getSunsetLocalDateTime()
@@ -54,7 +55,7 @@ enum class WeatherCodes(
                 if (currentTime.isBefore(sunrise) || currentTime.isAfter(sunset)) {
                     weatherCode += 100
                     //       println("Zeit = nach oder vor Sonnenuntergang")
-                }
+               // }
 
             }
 

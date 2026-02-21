@@ -12,8 +12,8 @@ class ApiHandler() : Api {
 
     override fun fetchWeather(location: Location): Weather? {
         var result: Weather? = null
-        val latitude = location.getLatitude()
-        val longitude = location.getLongitude()
+        val latitude = location.latitude
+        val longitude = location.longitude
         val apiUrl = "https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&daily=weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,wind_direction_10m,precipitation,freezing_level_height&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,wind_direction_10m,precipitation,weather_code&timezone=Europe%2FBerlin&forecast_days=14"
 
 // Internetquelle für JSON-Parser: https://gist.github.com/Da9el00/a29b4acca9dec698e18f88fca2eb8c96
@@ -186,7 +186,7 @@ class ApiHandler() : Api {
                         val elevation = item.optDouble("elevation", 0.0)
                         val id = item.optLong("id", 0L).toInt()
 
-                        results.add(Location(latitude, longitude, name, kanton, bezirk, gemeinde, elevation, id.toUInt()))
+                        results.add(Location(latitude, longitude, name, kanton, bezirk, gemeinde, elevation, id.toInt()))
                     }
                 }
 
