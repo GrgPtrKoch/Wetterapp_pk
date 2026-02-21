@@ -67,4 +67,12 @@ object AppStyle {
         }
     }
 
+    fun layoutLabelBottomRight(label: Label) {
+        with(label) {
+            alignment = Pos.TOP_LEFT
+            font = FONT_14_BOLD
+            padding = Insets(0.0, 0.0, 8.0, 5.0)
+        }
+    }
+
 }

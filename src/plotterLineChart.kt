@@ -6,6 +6,7 @@ import javafx.scene.chart.LineChart
 import javafx.scene.chart.NumberAxis
 import javafx.scene.chart.XYChart
 import javafx.scene.chart.XYChart.Series
+import javafx.scene.control.Label
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -52,8 +53,15 @@ object plotterLineChart {
 
         // X-Achsen Label gewuenschte Schriftgroesse vorgeben
         xAxis.lookup(".axis-label").style = "-fx-font-size: 15px; -fx-font-family: 'Helvetica';"
+
         // Y-Achsen Label gewuenschte Schriftgroesse vorgeben
         yAxis.lookup(".axis-label").style = "-fx-font-size: 15px; -fx-font-family: 'Helvetica';"
+
+        // X/Y-Achsen Label Stil über AppStyle setzen --> für einen Test aktivieren, ersetzt dann Zeile 54 bis 58
+//        runLater {
+//            (xAxis.lookup(".axis-label") as? Label)?.let {AppStyle.layoutLabelBottomRight(it) }
+//            (yAxis.lookup(".axis-label") as? Label)?.let {AppStyle.layoutLabelBottomRight(it) }
+//        }
 
         with(chart) {
             maxHeight = 200.0
@@ -112,6 +120,7 @@ object plotterLineChart {
             // Ergaenzung um Temperatur-Label als Node setzen (mittels Claude AI erstellt)
             // von hier
             val label = javafx.scene.control.Label("${value}°C")
+            // Beschriftung wird direkt im Objekt definiert, da es zusätzliche grafische Formatierungsmerkmale gebraucht hat. Nicht nur klassisches Label
             label.style = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-opacity: 0.65; -fx-text-fill: ${if (serie == series[0]) "brown" else "black"}; -fx-border-width: 0; -fx-background-color: white;"
             data.node = label
             // bis hier
