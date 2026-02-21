@@ -1,4 +1,4 @@
-import plotterLineChart.plot
+
 import java.beans.XMLDecoder
 import java.beans.XMLEncoder
 import java.io.BufferedInputStream
@@ -125,7 +125,7 @@ data class WeatherData(
                 LocalDateTime.now().toString(),
                 weather.latitude,
                 weather.longitude,
-                weather.locationID.toInt(),
+                weather.locationID,
                 weather.getTemperature(),
 
                 weather.getWeatherCode().code
@@ -215,7 +215,7 @@ data class WeatherData(
         val wrapper = loadFavorites(file)
         print("Gespeicherte Favoriten :")
         wrapper.favorites.forEach { fav->
-            println("ID: ${fav.location.getLocationID()}---Name: ${fav.location.getLocationName()} ")
+            println("ID: ${fav.location.id}---Name: ${fav.location.name} ")
         }
     }
 
@@ -245,7 +245,7 @@ data class WeatherData(
         } else {
             FavoriteWrapper()
         }
-        if (wrapper.favorites.none { it.location.getLocationID() == favorite.location.getLocationID() }) {
+        if (wrapper.favorites.none { it.location.id == favorite.location.id}) {
             wrapper.favorites.add(favorite)
         }
 
@@ -257,7 +257,7 @@ data class WeatherData(
             )
             encoder.writeObject(wrapper)            // Objekt speichern
             encoder.close()                         // Stream schliessen
-            println("Favorit gespeichert in XML: ${favorite.location.getLocationName()}")
+            println("Favorit gespeichert in XML: ${favorite.location.name}")
         } catch (e: Exception) {
             e.printStackTrace()
         }

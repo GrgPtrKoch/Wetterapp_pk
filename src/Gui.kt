@@ -83,7 +83,7 @@ class Gui : Application() {
         Gui.selectedLocationWeather = manager.getCurrentWeather(location)
         fillInLocationData(Gui.selectedLocation)
         fillInWeatherData(Gui.selectedLocationWeather)
-        searchbar.tflSucheingabe.text = location.getLocationName()
+        searchbar.tflSucheingabe.text = location.name
     }
 
     private val lblProzent = Label("98%").apply {
@@ -262,10 +262,10 @@ class Gui : Application() {
     }
 
     private fun fillInLocationData(location: Location?) {
-        dayView.lblLocation.text = Gui.selectedLocation?.getLocationName()
+        dayView.lblLocation.text = Gui.selectedLocation?.name
         if (location != null) {
-            dayView.pinPosition(dayView.calculatePosition(location.getLatitude(), location.getLongitude()))
-            detailsView.lblDetailsTitle.text = "Details für ${location.getLocationName()}"
+            dayView.pinPosition(dayView.calculatePosition(location.latitude, location.longitude))
+            detailsView.lblDetailsTitle.text = "Details für ${location.name}"
         }
     }
 
