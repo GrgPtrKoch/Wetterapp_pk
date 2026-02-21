@@ -26,6 +26,7 @@ object plotterLineChart {
     private val weekDays = mutableListOf<String>()
     private val series: MutableList<Series<String, Number>> = mutableListOf()
     private val yAxis = NumberAxis()
+    private val weather = Gui.selectedLocationWeather?.getDailyWeatherDataAll()
 
     /*Die init Block Funktion um das aktuelle Datum und den Wochentag
     auf der X-Achsenbeschreibung anzuzeigen, wurde mittels Claude AI erstellt.*/
@@ -39,7 +40,16 @@ object plotterLineChart {
             val weekDayName = tag.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.GERMAN)
             val datum = tag.format(DateTimeFormatter.ofPattern("dd.MM"))
 
-            weekDays.add("$weekDayName\n$datum")
+            val dailyWeather = weather?.getOrNull(i)
+            val weatherCode = if (dailyWeather != null) {
+                WeatherCodes.fromCode(
+                    code = TODO(),
+                    weather = TODO()
+                )
+            } else {
+                WeatherCodes.UNBEKANNT
+            }
+            weekDays.add("$weekDayName\n$datum\n\n$weatherCode\n")
         }
     }
 
@@ -48,23 +58,17 @@ object plotterLineChart {
 
 
     fun getView(): LineChart<String?, Number?> {
-        xAxis.label = "Wochentag"
-        yAxis.label = "Temperatur [C]"
+        xAxis.label = "7 Tage Wettervorhersage [day/date]"
+        yAxis.label = "Temperatur [°C]"
 
-        // X-Achsen Label gewuenschte Schriftgroesse vorgeben
-        xAxis.lookup(".axis-label").style = "-fx-font-size: 15px; -fx-font-family: 'Helvetica';"
-
-        // Y-Achsen Label gewuenschte Schriftgroesse vorgeben
-        yAxis.lookup(".axis-label").style = "-fx-font-size: 15px; -fx-font-family: 'Helvetica';"
-
-        // X/Y-Achsen Label Stil über AppStyle setzen --> für einen Test aktivieren, ersetzt dann Zeile 54 bis 58
-//        runLater {
-//            (xAxis.lookup(".axis-label") as? Label)?.let {AppStyle.layoutLabelBottomRight(it) }
-//            (yAxis.lookup(".axis-label") as? Label)?.let {AppStyle.layoutLabelBottomRight(it) }
-//        }
+//        // X-, und Y-Achse Label gewuenschte Schriftgroesse von appStyle setzen
+        runLater {
+            (xAxis.lookup(".axis-label") as? Label)?.let {appStyle.layoutLabelBottomRight(it) }
+            (yAxis.lookup(".axis-label") as? Label)?.let {appStyle.layoutLabelBottomRight(it) }
+        }
 
         with(chart) {
-            maxHeight = 200.0
+            maxHeight = 300.0
             legendSide = Side.LEFT
             createSymbols = false
             animated = false
@@ -78,7 +82,6 @@ object plotterLineChart {
         }
 
         // Y-Achse anpassen
-        val weather = Gui.selectedLocationWeather?.getDailyWeatherDataAll()
         if (weather != null) {
             val maxTemp = weather.maxOf { it.getTemperatureMax() }
             val minTemp = weather.minOf { it.getTemperatureMin() }
@@ -119,9 +122,9 @@ object plotterLineChart {
 
             // Ergaenzung um Temperatur-Label als Node setzen (mittels Claude AI erstellt)
             // von hier
-            val label = javafx.scene.control.Label("${value}°C")
+            val label = Label("${value}°C")
             // Beschriftung wird direkt im Objekt definiert, da es zusätzliche grafische Formatierungsmerkmale gebraucht hat. Nicht nur klassisches Label
-            label.style = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-opacity: 0.65; -fx-text-fill: ${if (serie == series[0]) "brown" else "black"}; -fx-border-width: 0; -fx-background-color: white;"
+            label.style = "-fx-font-size: 11px; -fx-font-weight: bold; -fx-opacity: 0.65;-fx-font-family: 'Helvetica'; -fx-text-fill: ${if (serie == series[0]) "brown" else "black"}; -fx-border-width: 0; -fx-background-color: white;"
             data.node = label
             // bis hier
 
@@ -146,8 +149,5 @@ object plotterLineChart {
                 updateCount = 0
             }
         }
-    }
-
-    private fun doNothing() {
     }
 }

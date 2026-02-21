@@ -1,3 +1,4 @@
+
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.control.Label
@@ -5,7 +6,7 @@ import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import javafx.scene.text.FontWeight
 
-object AppStyle {
+object appStyle {
     val MAIN_FONT_COLOR = Color.web("#232F48")
     val ACCENT_FONT_COLOR = Color.web("#3D90FD")
     val ACCENT_COLOR_LIGHT = Color.web("#D6E8FF")

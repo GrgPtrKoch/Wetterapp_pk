@@ -21,5 +21,4 @@ data class DailyWeather(
     fun getSunrise(): String = "${sunrise.hour}:${sunrise.minute} Uhr"
     fun getSunsetLocalDateTime(): LocalDateTime = sunset
     fun getSunriseLocalDateTime(): LocalDateTime = sunrise
-
 }

@@ -88,7 +88,7 @@ class Gui : Application() {
 
     private val lblProzent = Label("98%").apply {
         alignment = Pos.CENTER
-        font = AppStyle.FONT_16
+        font = appStyle.FONT_16
         //background = Background(BackgroundFill(Color.BLUE, null, null))
     }
 
@@ -103,7 +103,7 @@ class Gui : Application() {
     }
 
     private val lblGuete = Label("Güte der Vorhersage").apply {
-        font = AppStyle.FONT_18
+        font = appStyle.FONT_18
     }
 
     private val hBoxGuete = HBox().apply {
@@ -249,8 +249,8 @@ class Gui : Application() {
             textAlignment = TextAlignment.CENTER
             isWrapText = true
             padding = Insets(10.0, 0.0, 0.0, 0.0)
-            font = AppStyle.FONT_14
-            textFill = AppStyle.MAIN_FONT_COLOR
+            font = appStyle.FONT_14
+            textFill = appStyle.MAIN_FONT_COLOR
         }
         val resultsBox = VBox().apply {
             alignment = Pos.CENTER

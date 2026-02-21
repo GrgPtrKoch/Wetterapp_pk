@@ -14,15 +14,6 @@ import javafx.application.Application.*
 fun main(){
 
     launch(Gui::class.java)
-
-//    val myApiHandler = ApiHandler()
-//    val myTest = Manager(myApiHandler)
-//    myTest.fetchLocations("Wil")
-//    val loc = myTest.pickLocation("Wil", 1)
-//    val test = myTest.getCurrentWeather(loc)
-//    println("$test")
-
-
 }
 
 

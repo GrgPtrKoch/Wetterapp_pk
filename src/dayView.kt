@@ -32,7 +32,7 @@ object dayView {
     val lblUpdateTime = Label("Für welchen Ort möchtest du das Wetter abfragen?").apply {
         alignment = Pos.CENTER_LEFT
         font = Font.font("Outfit", 16.0)
-        textFill = AppStyle.ACCENT_FONT_COLOR
+        textFill = appStyle.ACCENT_FONT_COLOR
     }
 
     val lblCurrentDay = Label().apply {
@@ -87,12 +87,12 @@ object dayView {
 
     val lblWeatherCode = Label().apply {
         alignment = Pos.CENTER_LEFT
-        font = AppStyle.FONT_16
+        font = appStyle.FONT_16
     }
 
     val lblTemperature = Label().apply {
         alignment = Pos.CENTER_LEFT
-        font = AppStyle.FONT_64_BOLD
+        font = appStyle.FONT_64_BOLD
         padding = Insets(0.0, 20.0, 0.0, 0.0)
     }
 
@@ -111,9 +111,9 @@ object dayView {
     val lblMaxTemperature = Label("-").apply {
         prefWidth = 40.0
         alignment = Pos.CENTER_RIGHT
-        textFill = AppStyle.RED
+        textFill = appStyle.RED
         minWidth = Label.USE_PREF_SIZE
-        font = AppStyle.FONT_16
+        font = appStyle.FONT_16
     }
     private val hBoxTempMax = HBox().apply {
         alignment = Pos.CENTER_LEFT
@@ -123,9 +123,9 @@ object dayView {
     val lblMinTemperature = Label("-").apply {
         prefWidth = 40.0
         alignment = Pos.CENTER_RIGHT
-        textFill = AppStyle.BLUE
+        textFill = appStyle.BLUE
         minWidth = Label.USE_PREF_SIZE
-        font = AppStyle.FONT_16
+        font = appStyle.FONT_16
     }
     private val hBoxTempMin = HBox().apply {
         alignment = Pos.CENTER_LEFT
