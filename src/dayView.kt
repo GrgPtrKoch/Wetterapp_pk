@@ -20,7 +20,6 @@ object dayView {
             activeLocation = { Gui.selectedLocation },
             activeWeather = { Gui.selectedLocationWeather }
         )
-
     }
 
     fun addFavoriteButtonToBox() {
@@ -146,6 +145,7 @@ object dayView {
     }
 
     val imageViewContainer = StackPane(mapView).apply {
+        alignment = Pos.CENTER_LEFT
         children.addAll(pinView)
     }
 

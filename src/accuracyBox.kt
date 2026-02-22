@@ -1,4 +1,5 @@
 import javafx.event.EventHandler
+import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.control.Button
 import javafx.scene.control.Label
@@ -6,6 +7,8 @@ import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
+import javafx.scene.text.Text
+import javafx.scene.text.TextAlignment
 
 object accuracyBox {
 
@@ -34,9 +37,16 @@ object accuracyBox {
             fitHeight = 20.0
         }
         style = "-fx-background-color: transparent; -fx-padding: 0;"
+
+        setOnMouseEntered {
+            style = "-fx-background-color: transparent; -fx-padding: 0; -fx-opacity: 1.6; -fx-cursor: hand;"
+        }
+        setOnMouseExited {
+            style = "-fx-background-color: transparent; -fx-padding: 0; -fx-opacity: 1.0;"
+        }
     }
 
-    val descriptionLbl = Label("exzellent").apply {
+    val descriptionLbl = Label("").apply {
         font = appStyle.FONT_14
     }
 
@@ -51,6 +61,5 @@ object accuracyBox {
         spacing = 8.0
         children.addAll(upperHbox, lowerHbox)
     }
-
     fun getView(): VBox = accuracyVbox
 }
