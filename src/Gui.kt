@@ -1,6 +1,5 @@
 import javafx.application.Application
 import javafx.application.Platform
-import javafx.beans.property.SimpleBooleanProperty
 import javafx.collections.FXCollections
 import javafx.event.EventHandler
 import javafx.geometry.Insets
@@ -8,48 +7,35 @@ import javafx.geometry.Pos
 import javafx.scene.Cursor
 import javafx.scene.Node
 import javafx.scene.Scene
+import javafx.scene.control.Alert
 import javafx.scene.control.Button
-import javafx.scene.control.Label
 import javafx.scene.control.ListCell
 import javafx.scene.control.ListView
 import javafx.scene.control.TextField
 import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
-import javafx.scene.layout.Border
 import javafx.scene.layout.BorderPane
-import javafx.scene.layout.BorderStroke
-import javafx.scene.layout.BorderStrokeStyle
-import javafx.scene.layout.BorderWidths
 import javafx.scene.layout.CornerRadii
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
-import javafx.scene.text.Text
-import javafx.scene.text.TextAlignment
-import javafx.stage.Modality
 import javafx.stage.Stage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.launch
 import plotterLineChart.plot
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.coroutines.CoroutineContext
 import kotlin.math.round
+import kotlinx.coroutines.javafx.JavaFx
 
-//fun exit() {
-//    with(Alert(Alert.AlertType.INFORMATION)) {
-//        contentText = "Wenn du die App schliessen willst, drücke auf «OK»."
-//        showAndWait()
-//    }
-//}
-class Gui : Application(), CoroutineScope {
+
+class Gui : Application() {
     private val manager: Logic = Manager()
-    //private val favorites: guiFavorites = GuiFavorites(manager)
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private var locationsModel = FXCollections.observableArrayList<Location>()
     private val resultsList = ListView<Location>().apply {
         prefWidth = 400.0
@@ -84,22 +70,27 @@ class Gui : Application(), CoroutineScope {
         }
     }
 
+
+
+
     private val onHomeClick = { location: Location ->
-        launch {
-            val wetter = manager.getCurrentWeather(location)
-            Platform.runLater {
-                selectedLocation = location
-                selectedLocationWeather = wetter
-                fillInLocationData(selectedLocation)
-                fillInWeatherData(selectedLocationWeather)
+        scope.launch {
+            selectedLocation = location
+            val weather = withContext(Dispatchers.IO) {
+                manager.getCurrentWeather(location)
             }
-        }
-        val favList = manager.getFavoritesObservableList()
-        val activeLocation = favList.find { it.location.id == location.id }
-        if (activeLocation != null) {
-            favList.remove(activeLocation)
-            favList.add(0,activeLocation)
-            manager.updateFavoriteFile()
+            selectedLocationWeather = weather
+            fillInLocationData(selectedLocation)
+            fillInWeatherData(selectedLocationWeather)
+            val favList = manager.getFavoritesObservableList()
+            val activeLocation = favList.find { it.location.id == location.id }
+            if (activeLocation != null) {
+                favList.remove(activeLocation)
+                favList.add(0, activeLocation)
+                withContext(Dispatchers.IO) {
+                    manager.updateFavoriteFile()
+                }
+            }
         }
     }
 
@@ -185,7 +176,7 @@ class Gui : Application(), CoroutineScope {
             scene = Scene(root)
             title = "Weather2B"
             isMaximized = true
-            //setOnCloseRequest { exit() }
+            setOnCloseRequest { exit() }
             show()
             root.requestFocus()     // mit Tab-Taste krallt sich Textfeld wieder an die Aufmerksamkeit -> Cursor...
         }
@@ -194,6 +185,11 @@ class Gui : Application(), CoroutineScope {
             val topFavorite = currentFavorites[0]
             onHomeClick(topFavorite.location)
         }
+    }
+
+    override fun stop() {
+        scope.cancel()
+        super.stop()
     }
 
     private fun fillInLocationData(location: Location?) {
@@ -216,12 +212,18 @@ class Gui : Application(), CoroutineScope {
     }
 
     private fun fillAccuracyBox(weather: Weather) {
-        if (manager.checkAccuracy(weather.getLocationID(), weather) != null) {
-            accuracyBox.percentLbl.text = "${manager.checkAccuracy(weather.getLocationID(),weather)} %"
-            accuracyBox.descriptionLbl.text = accuracyBox.fillAccuracyLabel(manager.checkAccuracy(weather.getLocationID(),weather))
-        } else {
-            accuracyBox.percentLbl.text = ""
-            accuracyBox.descriptionLbl.text = "Es ist noch keine Berechnung erfolgt."
+        scope.launch {
+            val score = withContext(Dispatchers.Default) {
+                manager.checkAccuracy(weather.getLocationID(), weather)
+            }
+            if (score != null) {
+                accuracyBox.percentLbl.text = "$score%"
+                accuracyBox.descriptionLbl.text =
+                    accuracyBox.fillAccuracyLabel(score)
+            } else {
+                accuracyBox.percentLbl.text = ""
+                accuracyBox.descriptionLbl.text = "Es ist noch keine Berechnung erfolgt."
+            }
         }
     }
 
@@ -253,14 +255,12 @@ class Gui : Application(), CoroutineScope {
     }
 
     private fun fillSearchResults(string: String) {
-        launch {
-            val search = manager.getLocations(string)
-            Platform.runLater {
-                locationsModel.clear()
-                for (result in search) {
-                    locationsModel.add(result)
-                }
+        scope.launch {
+            val results = withContext(Dispatchers.IO) {
+                manager.getLocations(string)
             }
+            locationsModel.clear()
+            results.forEach { locationsModel.add(it) }
         }
     }
 
@@ -291,9 +291,13 @@ class Gui : Application(), CoroutineScope {
             }
         }
     }
-    val job = Job()
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Default + job
+
+    fun exit() {
+        with(Alert(Alert.AlertType.INFORMATION)) {
+        contentText = "Wenn du die App schliessen willst, drücke auf «OK»."
+        showAndWait()
+    }
+}
 
     companion object {
         var selectedLocation: Location? = null
