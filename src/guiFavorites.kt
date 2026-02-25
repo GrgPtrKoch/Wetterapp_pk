@@ -54,7 +54,6 @@ object guiFavorites {
             minHeight = Region.USE_PREF_SIZE
             maxHeight = Region.USE_PREF_SIZE
 
-
             val ttlFavorites = Label("Meine Favoriten ⭐ ").apply {
                 font = appStyle.FONT_24
             }
