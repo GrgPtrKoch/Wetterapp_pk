@@ -1,5 +1,3 @@
-import Gui.Companion.selectedLocation
-import Gui.Companion.selectedLocationWeather
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.Cursor
@@ -9,21 +7,22 @@ import javafx.scene.control.Label
 import javafx.scene.control.ListView
 import javafx.scene.control.TextField
 import javafx.scene.effect.InnerShadow
-import javafx.scene.layout.Border
-import javafx.scene.layout.BorderStroke
-import javafx.scene.layout.BorderStrokeStyle
-import javafx.scene.layout.BorderWidths
-import javafx.scene.layout.CornerRadii
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
-import javafx.scene.paint.Color
 import javafx.scene.text.TextAlignment
 import javafx.stage.Modality
 import javafx.stage.Stage
 
-object searchbar {
+/*
+  Projekt:      Wetterapp
+  Firma:        ABB Technikerschule
+  Autor:        P.Koch
 
+  Beschreibung: Suchfeld oben links platzieren und Ein-, Ausgabe darüber triggern
+ */
+
+object guiSearchbar {
 
     val tflSucheingabe = TextField().apply {
         isEditable = true

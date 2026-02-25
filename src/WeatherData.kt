@@ -1,8 +1,4 @@
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import java.beans.XMLDecoder
 import java.beans.XMLEncoder
 import java.io.BufferedInputStream
@@ -21,8 +17,7 @@ import java.time.format.DateTimeFormatter
   Firma:        ABB Technikerschule
   Autor:        Tobias Graf
 
-  Beschreibung: Arbeitsdaten werden hier gespeichert
-  und die Guetepruefung durchgeführt
+  Beschreibung: Arbeitsdaten werden in Files Remanent abgespeichert
  */
 
 data class WeatherData(
@@ -207,7 +202,7 @@ data class WeatherData(
                 )
                 encoder.writeObject(wrapper)            // Objekt speichern
                 encoder.close()                         // Stream schliessen
-                println("Favorit gespeichert in XML: ${favorite.location.name}")
+//                println("Favorit gespeichert in XML: ${favorite.location.name}")
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -215,28 +210,4 @@ data class WeatherData(
         }
 
     }
-
-
-//    override fun readWeatherDataDaily() {
-//        val file = File("resources/dailyData/DailyWeatherData$date.txt")
-//
-//        val lines = file.readLines()
-//        for (line in lines) {
-//            print(line)
-//        }
-//        return emptyList()
-//    }
-
-  /*  override fun readFavorites() {
-        val file = File("resources/favoriteLocationData/Favorites.xml")
-
-        val lines = file.readLines()
-        for (line in lines) {
-            print (line)
-        }
-    } */
-
-//    override fun checkAccuracy() {
-//
-//    }
 

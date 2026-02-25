@@ -1,5 +1,4 @@
 import javafx.application.Application
-import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.event.EventHandler
 import javafx.geometry.Insets
@@ -30,11 +29,10 @@ import plotterLineChart.plot
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.math.round
-import kotlinx.coroutines.javafx.JavaFx
 
 
 class Gui : Application() {
-    private val manager: Logic = Manager()
+    private val manager: Guilogic = Manager()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private var locationsModel = FXCollections.observableArrayList<Location>()
     private val resultsList = ListView<Location>().apply {
@@ -70,9 +68,6 @@ class Gui : Application() {
         }
     }
 
-
-
-
     private val onHomeClick = { location: Location ->
         scope.launch {
             selectedLocation = location
@@ -107,19 +102,19 @@ class Gui : Application() {
         spacing = 8.0
         padding = Insets(30.0)
         // Breite der Sucheingabe = Breite der Detailsansicht (Haarlinie)
-        searchbar.tflSucheingabe.prefWidthProperty().bind(detailsView.getView().widthProperty().subtract(45.0))
+        guiSearchbar.tflSucheingabe.prefWidthProperty().bind(detailsView.getView().widthProperty().subtract(45.0))
         accuracyBox.getView().prefWidthProperty().bind(this.widthProperty().multiply(0.5))
         accuracyBox.infoBtn.onAction = EventHandler {event ->
             val source = (event.source as Node).scene.window as Stage
             accuracyBox.showInfoPopup(source)
         }
-        searchbar.tflSucheingabe.minWidthProperty().bind(searchbar.tflSucheingabe.prefWidthProperty())
-        searchbar.tflSucheingabe.maxWidthProperty().bind(searchbar.tflSucheingabe.prefWidthProperty())
+        guiSearchbar.tflSucheingabe.minWidthProperty().bind(guiSearchbar.tflSucheingabe.prefWidthProperty())
+        guiSearchbar.tflSucheingabe.maxWidthProperty().bind(guiSearchbar.tflSucheingabe.prefWidthProperty())
 
-        search(searchbar.btnSuche)
-        searchTfl(searchbar.tflSucheingabe)
+        search(guiSearchbar.btnSuche)
+        searchTfl(guiSearchbar.tflSucheingabe)
 
-        children.addAll(searchbar.getView(), accuracyBox.getView())
+        children.addAll(guiSearchbar.getView(), accuracyBox.getView())
     }
 
     private val hBoxDayViewFavorites by lazy {
@@ -158,7 +153,7 @@ class Gui : Application() {
         dayView.addFavoriteButtonToBox()
         guiFavorites.updateFavoritesList(onHomeClick)
         manager.getFavoritesObservableList().addListener(javafx.collections.ListChangeListener{
-            guiFavorites.updateFavoritesList(onHomeClick)})
+        guiFavorites.updateFavoritesList(onHomeClick)})
 
         val root = BorderPane().apply {
             top = hBoxSearchAccuracy
@@ -265,7 +260,7 @@ class Gui : Application() {
     }
 
     private fun useSearchbar(stage: Stage) {
-        searchbar.popupLogic(stage, resultsList) { selected ->
+        guiSearchbar.popupLogic(stage, resultsList) { selected ->
             selectedLocation = selected
             selectedLocationWeather = manager.getCurrentWeather(selected)
             fillInLocationData(selectedLocation)
@@ -276,7 +271,7 @@ class Gui : Application() {
     private fun search(with: Button) {
         with(with) {
             onAction = EventHandler { event ->
-                fillSearchResults(searchbar.tflSucheingabe.text)
+                fillSearchResults(guiSearchbar.tflSucheingabe.text)
                 val source = (event.source as Node).scene.window as Stage
                 useSearchbar(source)
             }

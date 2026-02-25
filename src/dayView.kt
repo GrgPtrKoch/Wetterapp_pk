@@ -1,4 +1,3 @@
-import appStyle.FONT_24_BOLD
 import javafx.event.EventHandler
 import javafx.geometry.Insets
 import javafx.geometry.Pos
@@ -7,18 +6,20 @@ import javafx.scene.control.Tooltip
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import javafx.scene.layout.HBox
-import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
 import javafx.scene.text.Font
-import javafx.scene.text.FontWeight
-import javafx.scene.text.TextAlignment
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import javax.tools.Tool
-import kotlin.time.Duration
-import kotlin.time.DurationUnit
+
+/*
+  Projekt:      Wetterapp
+  Firma:        ABB Technikerschule
+  Autor:        P.Koch, P.Theiler und T.Graf
+
+  Beschreibung: In Day View wird das Feld unter der Suchleiste erstellt und mit den aktuellen Wetterdaten gefüllt.
+ */
 
 object dayView {
     lateinit var favorites: guiFavorites

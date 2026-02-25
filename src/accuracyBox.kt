@@ -1,4 +1,3 @@
-import javafx.event.EventHandler
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.Scene
@@ -12,6 +11,15 @@ import javafx.scene.text.Text
 import javafx.scene.text.TextAlignment
 import javafx.stage.Modality
 import javafx.stage.Stage
+
+/*
+  Projekt:      Wetterapp
+  Firma:        ABB Technikerschule
+  Autor:        P.Koch
+
+  Beschreibung: Das Informationsfeld der Guetepruefung wird hier definiert und mit
+  aktuellen Daten befuellt.
+ */
 
 object accuracyBox {
 

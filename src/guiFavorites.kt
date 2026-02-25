@@ -8,7 +8,6 @@ import javafx.scene.control.Label
 import javafx.scene.image.ImageView
 import javafx.scene.layout.Background
 import javafx.scene.layout.HBox
-import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
@@ -19,8 +18,16 @@ import kotlinx.coroutines.Job
 import kotlin.apply
 import kotlin.collections.forEach
 
+/*
+  Projekt:      Wetterapp
+  Firma:        ABB Technikerschule
+  Autor:        T.Theiler
+
+  Beschreibung: Hier werden die Favoriten mittels Gui Eingabe hinzugefügt und aufbereitet.
+ */
+
 object guiFavorites {
-    lateinit var manager : Logic
+    lateinit var manager : Guilogic
 
     private val favoriteConstruct = VBox(5.0).apply {
         alignment = Pos.TOP_CENTER
