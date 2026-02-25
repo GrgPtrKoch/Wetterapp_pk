@@ -304,6 +304,9 @@ class Gui : Application() {
             if (manager.checkAccuracy(weather.getLocationID(), weather) != null) {
                 accuracyBox.percentLbl.text = "${manager.checkAccuracy(weather.getLocationID(),weather)} %"
                 accuracyBox.descriptionLbl.text = fillAccuracyLabel(manager.checkAccuracy(weather.getLocationID(),weather))
+            } else {
+                accuracyBox.percentLbl.text = ""
+                accuracyBox.descriptionLbl.text = "Es ist noch keine Berechnung erfolgt."
             }
 
             dayView.lblWeatherCode.text = weather.getWeatherCode().description
@@ -328,7 +331,6 @@ class Gui : Application() {
         }
         guiFavorites.updateStarColor(selectedLocation)
         dayView.btnAddFavorite.isVisible = true
-
     }
 
     fun fillSearchResults(string: String) {
@@ -359,7 +361,7 @@ class Gui : Application() {
     }
 
     fun fillAccuracyLabel(score: Double?): String {
-        score ?:  return "Die Prognosequalität kann nicht berechnet werden."
+        score ?:  return "Die Prognosequalität kann nicht angezeigt werden."
             return when (score) {
                 in 99.00..100.0 -> "exzellent"
                 in 95.00..99.49  -> "sehr gut"
@@ -367,8 +369,7 @@ class Gui : Application() {
                 in 60.00..93.49 -> "genügend"
                 in 20.00..59.99 -> "verbesserungswürdig"
                 in 0.00..19.99 -> "Ist etwas schief gelaufen?"
-                // Hier noch richtig machen...
-                else -> "Es sind noch keine Daten ausgewertet worden."
+                else -> "Wert ungültig"
             }
     }
 
