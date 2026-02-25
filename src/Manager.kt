@@ -155,7 +155,7 @@ class Manager() : Logic {
 
     override fun updateFavoriteFile() {
         val userHome = System.getProperty("user.home")
-        val file = File(userHome,".Weather2b/storage/favorites/favoritesList.xml")
+        val file = File(userHome,".Weather2b/storage/favoritesList.xml")
         if (file.exists()) {
             file.delete()
             favoritesList.forEach { fileHandler.storeFavorites(it) }
