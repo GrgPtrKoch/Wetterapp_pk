@@ -1,5 +1,5 @@
 import javafx.application.Application
-import javafx.beans.property.SimpleBooleanProperty
+import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.event.EventHandler
 import javafx.geometry.Insets
@@ -7,44 +7,35 @@ import javafx.geometry.Pos
 import javafx.scene.Cursor
 import javafx.scene.Node
 import javafx.scene.Scene
+import javafx.scene.control.Alert
 import javafx.scene.control.Button
-import javafx.scene.control.Label
 import javafx.scene.control.ListCell
 import javafx.scene.control.ListView
 import javafx.scene.control.TextField
 import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
-import javafx.scene.layout.Border
 import javafx.scene.layout.BorderPane
-import javafx.scene.layout.BorderStroke
-import javafx.scene.layout.BorderStrokeStyle
-import javafx.scene.layout.BorderWidths
 import javafx.scene.layout.CornerRadii
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
-import javafx.scene.text.Text
-import javafx.scene.text.TextAlignment
-import javafx.stage.Modality
 import javafx.stage.Stage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.*
+import kotlinx.coroutines.launch
 import plotterLineChart.plot
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.math.round
+import kotlinx.coroutines.javafx.JavaFx
 
-//fun exit() {
-//    with(Alert(Alert.AlertType.INFORMATION)) {
-//        contentText = "Wenn du die App schliessen willst, drücke auf «OK»."
-//        showAndWait()
-//    }
-//}
+
 class Gui : Application() {
     private val manager: Logic = Manager()
-
-    //private val favorites: guiFavorites = GuiFavorites(manager)
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private var locationsModel = FXCollections.observableArrayList<Location>()
     private val resultsList = ListView<Location>().apply {
         prefWidth = 400.0
@@ -79,27 +70,28 @@ class Gui : Application() {
         }
     }
 
-    private val onHomeClick = { location: Location ->
 
+
+
+    private val onHomeClick = { location: Location ->
+        scope.launch {
             selectedLocation = location
-            selectedLocationWeather = manager.getCurrentWeather(location)
+            val weather = withContext(Dispatchers.IO) {
+                manager.getCurrentWeather(location)
+            }
+            selectedLocationWeather = weather
             fillInLocationData(selectedLocation)
             fillInWeatherData(selectedLocationWeather)
-
             val favList = manager.getFavoritesObservableList()
             val activeLocation = favList.find { it.location.id == location.id }
             if (activeLocation != null) {
                 favList.remove(activeLocation)
                 favList.add(0, activeLocation)
-                manager.updateFavoriteFile()
+                withContext(Dispatchers.IO) {
+                    manager.updateFavoriteFile()
+                }
             }
-    }
-
-
-    private val lblProzent = Label("").apply {
-        alignment = Pos.CENTER
-        font = appStyle.FONT_16
-        //background = Background(BackgroundFill(Color.BLUE, null, null))
+        }
     }
 
     private val hBoxBottom = HBox().apply {
@@ -184,7 +176,7 @@ class Gui : Application() {
             scene = Scene(root)
             title = "Weather2B"
             isMaximized = true
-            //setOnCloseRequest { exit() }
+            setOnCloseRequest { exit() }
             show()
             root.requestFocus()     // mit Tab-Taste krallt sich Textfeld wieder an die Aufmerksamkeit -> Cursor...
         }
@@ -193,6 +185,11 @@ class Gui : Application() {
             val topFavorite = currentFavorites[0]
             onHomeClick(topFavorite.location)
         }
+    }
+
+    override fun stop() {
+        scope.cancel()
+        super.stop()
     }
 
     private fun fillInLocationData(location: Location?) {
@@ -215,22 +212,27 @@ class Gui : Application() {
     }
 
     private fun fillAccuracyBox(weather: Weather) {
-        val score = manager.checkAccuracy(weather.getLocationID(), weather)
+        scope.launch {
+            val score = withContext(Dispatchers.Default) {
+                manager.checkAccuracy(weather.getLocationID(), weather)
+            }
             if (score != null) {
                 accuracyBox.percentLbl.text = "$score%"
-                accuracyBox.descriptionLbl.text = accuracyBox.fillAccuracyLabel(score)
+                accuracyBox.descriptionLbl.text =
+                    accuracyBox.fillAccuracyLabel(score)
             } else {
                 accuracyBox.percentLbl.text = ""
                 accuracyBox.descriptionLbl.text = "Es ist noch keine Berechnung erfolgt."
             }
+        }
     }
 
     private fun fillDayView(weather: Weather) {
-                dayView.lblWeatherCode.text = weather.getWeatherCode().description
-                dayView.lblTemperature.text = "${weather.getTemperature().toInt()}º"
-                dayView.lblMaxTemperature.text = "${round(weather.getDailyList()[0].getTemperatureMax()).toInt()}º"
-                dayView.lblMinTemperature.text = "${round(weather.getDailyList()[0].getTemperatureMin()).toInt()}º"
-                dayView.lblUpdateTime.text = "aktualisiert um: ${LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))} Uhr"
+        dayView.lblWeatherCode.text = weather.getWeatherCode().description
+        dayView.lblTemperature.text = "${weather.getTemperature().toInt()}º"
+        dayView.lblMaxTemperature.text = "${round(weather.getDailyList()[0].getTemperatureMax()).toInt()}º"
+        dayView.lblMinTemperature.text = "${round(weather.getDailyList()[0].getTemperatureMin()).toInt()}º"
+        dayView.lblUpdateTime.text = "aktualisiert um: ${LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))} Uhr"
     }
 
     private fun fillDetailsView(weather: Weather) {
@@ -253,10 +255,12 @@ class Gui : Application() {
     }
 
     private fun fillSearchResults(string: String) {
-            val search = manager.getLocations(string)
+        scope.launch {
+            val results = withContext(Dispatchers.IO) {
+                manager.getLocations(string)
+            }
             locationsModel.clear()
-            for (result in search) {
-                locationsModel.add(result)
+            results.forEach { locationsModel.add(it) }
         }
     }
 
@@ -287,6 +291,13 @@ class Gui : Application() {
             }
         }
     }
+
+    fun exit() {
+        with(Alert(Alert.AlertType.INFORMATION)) {
+        contentText = "Wenn du die App schliessen willst, drücke auf «OK»."
+        showAndWait()
+    }
+}
 
     companion object {
         var selectedLocation: Location? = null

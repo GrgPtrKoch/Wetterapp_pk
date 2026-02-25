@@ -15,6 +15,7 @@ import javafx.scene.paint.Color
 import javafx.scene.shape.SVGPath
 import javafx.scene.shape.StrokeLineCap
 import javafx.scene.shape.StrokeLineJoin
+import kotlinx.coroutines.Job
 import kotlin.apply
 import kotlin.collections.forEach
 
@@ -37,7 +38,7 @@ object guiFavorites {
         strokeLineJoin = StrokeLineJoin.ROUND
     }
 
-    fun createFavoriteBox(onHomeClick: (Location) -> Unit): VBox {
+    fun createFavoriteBox(onHomeClick: (Location) -> Job): VBox {
 
         val favoriteBox = VBox(5.0).apply {
             padding = Insets(5.0)
@@ -60,7 +61,7 @@ object guiFavorites {
         return favoriteBox
     }
 
-    fun createFavoriteList(favorite: Favorite, onHomeClick: (Location) -> Unit): HBox {
+    fun createFavoriteList(favorite: Favorite, onHomeClick: (Location) -> Job): HBox {
         val boxList = HBox(5.0).apply {
             padding = Insets(0.0, 8.0, 0.0, 8.0)
             alignment = Pos.CENTER_LEFT
@@ -118,7 +119,7 @@ object guiFavorites {
         return boxList
     }
 
-    fun updateFavoritesList(onHomeClick: (Location) -> Unit) {
+    fun updateFavoritesList(onHomeClick: (Location) -> Job) {
         favoriteConstruct.children.clear()
         val currentFavorites = manager.getFavoritesObservableList()
 
