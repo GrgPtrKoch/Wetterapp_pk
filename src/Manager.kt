@@ -19,13 +19,13 @@ class Manager() : Logic {
     private var lastSavedDate: LocalDate? = null
 
     private val weatherCodeCategories = listOf(
-        listOf(0, 100),                                                         // sonnig, klar
-        listOf(1,2,3,101,102,103),                                              // bewölkt
-        listOf(45,48,145,148),                                                  // Nebel
-        listOf(51,53,55,56,57,151,153,155,156,157),                             // leichter Regen
-        listOf(60,61,63,65,66,67,80,81,82,160,161,163,165,166,167,180,181,182), // Regen, Regenschauer
-        listOf(71,73,75,77,85,86,171,173,175,177,185,186),                      // Schnee, Schneeschauer
-        listOf(95,96,99,195,196,199)                                            // Gewitter
+        listOf(0, 100),
+        (1..39).toList() + (101..139).toList(),
+        (40..49).toList() + (140..149).toList(),
+        (50..59).toList() + (80..82).toList() + (150..159).toList() + (180..182).toList(),
+        (60..69).toList() + (160..169).toList(),
+        (70..79).toList() + (83..90).toList() + (170..179).toList() + (183..190).toList(),
+        (91..99).toList() + (191..199).toList()
     )
 
     private fun weatherCodeScore(forecasted: Int, actual: Int): Double {
@@ -41,17 +41,16 @@ class Manager() : Logic {
             abs(forecastedCategory - actualCategory) == 1 -> 98.0
             abs(forecastedCategory - actualCategory) in 2..3 -> 95.0
             abs(forecastedCategory - actualCategory) > 3 -> 90.0
-            else -> 0.0
+            else -> 0.0     // in Kategorien-Berechnung ist etwas falsch gelaufen.
         }
     }
 
-    override fun checkAccuracy(id: Int, currentWeather: Weather): Double {
+    override fun checkAccuracy(id: Int, currentWeather: Weather): Double? {
             val scores = mutableListOf<Double>()
             val storedWeatherEntries = fileHandler.getEntriesForLocation(id)
             val startOfCurrentDay = LocalDate.now().atStartOfDay()
             val currentHour = LocalDateTime.now().hour
             if (checkForFavorites(id)) {
-                println("aktuelle Stunde: ${currentHour}")
                 for (past in storedWeatherEntries) {
                     val pastTime = LocalDateTime.parse(past.timestamp).toLocalDate().atStartOfDay()
                     println("past time: ${pastTime}")
@@ -62,21 +61,21 @@ class Manager() : Logic {
                     // Prognose-Wertepaare für diese Stunde holen
                     val forecast = past.hourlyForecasts[currentHour]
                     // Temperaturdifferenz ab 2º C => 0% Güte!
-                    val limit = 2.0
+                    val limit = 5.0
                     val error = abs(forecast.wrapperTemperature - currentWeather.getTemperature())
-                    println("Temp-Prognose: $forecast, an Stelle: $currentHour in ${past.id}")
+                    println("Temp-Prognose: $forecast, an Stelle: $currentHour in ${past.id} -> $error")
                     println("Temp-aktuell: ${currentWeather.getTemperature()}")
                     // Prozentsatz der Temperaturgenauigkeit
-                    val temperatureScore = ((1-(error-limit)).coerceIn(0.0, 1.0) * 100)
+                    val temperatureScore = ((1-(error/limit)).coerceIn(0.0, 1.0) * 100)
                     println("TempScore: ${temperatureScore}")
                     val weatherCodesScore = weatherCodeScore(forecast.wrapperWeatherCode, currentWeather.getWeatherCode().code)
                     println("WeatherScore: ${weatherCodesScore}")
                     // Durchschnitt beider Prozentsätze
                     scores.add((temperatureScore + weatherCodesScore) / 2)
-
+                    println("Güte: ${scores.average()}")
+                }
             }
-        }
-        return if (scores.isEmpty()) -1.0 else "%.2f".format(scores.average()).toDouble()
+            return if (scores.isEmpty()) null else "%.2f".format(scores.average()).toDouble()
     }
 
     init {
@@ -102,7 +101,7 @@ class Manager() : Logic {
     }
 
     override fun getLocations(searchText: String): MutableList<Location> {
-        return try {
+        try {
             fetchedLocations = apiHandler.getLocations(searchText)
             return fetchedLocations
         } catch (e: NullPointerException) {

@@ -217,7 +217,7 @@ class Gui : Application() {
             font = appStyle.FONT_12_BOLD
         }
 
-        val temperatureText = Text("Weicht die vorhergesagte Temperatur um mehr als 2 °C vom tatsächlichen Wert ab, beträgt die Genauigkeit 0%. Je kleiner die Abweichung, desto höher der Wert.").apply{
+        val temperatureText = Text("Weicht die vorhergesagte Temperatur um mehr als 5°C vom tatsächlichen Wert ab, beträgt die Genauigkeit 0%. Je kleiner die Abweichung, desto höher der Wert.").apply{
             wrappingWidth = 345.0
             lineSpacing = 1.0
             font = appStyle.FONT_12
@@ -301,7 +301,7 @@ class Gui : Application() {
 
     private fun fillInWeatherData(weather: Weather?) {
         if (weather != null) {
-            if (manager.checkAccuracy(weather.getLocationID(), weather) > -1.0) {
+            if (manager.checkAccuracy(weather.getLocationID(), weather) != null) {
                 accuracyBox.percentLbl.text = "${manager.checkAccuracy(weather.getLocationID(),weather)} %"
                 accuracyBox.descriptionLbl.text = fillAccuracyLabel(manager.checkAccuracy(weather.getLocationID(),weather))
             }
@@ -358,17 +358,18 @@ class Gui : Application() {
         }
     }
 
-    fun fillAccuracyLabel(score: Double): String {
-        return when (score) {
-            in 99.5..100.0 -> "exzellent"
-            in 95.0..99.4999  -> "sehr gut"
-            in 93.5..94.9999 -> "gut"
-            in 90.0..93.4999 -> "genügend"
-            in 80.0..89.9999 -> "verbesserungswürdig"
-            in 40.0..79.9999 -> "Ist etwas schief gelaufen?"
-            // Hier noch richtig machen...
-            else -> "Es sind noch keine Daten ausgewertet worden."
-        }
+    fun fillAccuracyLabel(score: Double?): String {
+        score ?:  return "Die Prognosequalität kann nicht berechnet werden."
+            return when (score) {
+                in 99.00..100.0 -> "exzellent"
+                in 95.00..99.49  -> "sehr gut"
+                in 93.50..94.99 -> "gut"
+                in 60.00..93.49 -> "genügend"
+                in 20.00..59.99 -> "verbesserungswürdig"
+                in 0.00..19.99 -> "Ist etwas schief gelaufen?"
+                // Hier noch richtig machen...
+                else -> "Es sind noch keine Daten ausgewertet worden."
+            }
     }
 
     companion object {
