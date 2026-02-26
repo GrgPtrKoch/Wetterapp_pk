@@ -1,3 +1,5 @@
+package weather2b
+
 import javafx.event.EventHandler
 import javafx.geometry.Insets
 import javafx.geometry.Pos
@@ -10,6 +12,7 @@ import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
 import javafx.scene.text.Font
+import javafx.util.Duration
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -57,7 +60,7 @@ object dayView {
         val myTip = Tooltip()
         myTip.textProperty().bind(this.textProperty())
         this.tooltip = myTip
-        myTip.showDelay = javafx.util.Duration.millis(100.0)
+        myTip.showDelay = Duration.millis(100.0)
         alignment = Pos.CENTER_LEFT
         font = appStyle.FONT_36_LIGHT
         onMouseEntered = EventHandler {

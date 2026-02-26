@@ -1,9 +1,11 @@
+package weather2b
+
 /*
   Projekt:      Wetterapp
   Firma:        ABB Technikerschule
   Autor:        P.Theiler
 
-  Beschreibung: Funktion um Location Angaben aus der Suchfunktion auszulesen und im Code bereitzustellen.
+  Beschreibung: Funktion um weather2b.Location Angaben aus der Suchfunktion auszulesen und im Code bereitzustellen.
  */
 
 data class Location(

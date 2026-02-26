@@ -1,5 +1,8 @@
+package weather2b
+
 import javafx.application.Application
 import javafx.collections.FXCollections
+import javafx.collections.ListChangeListener
 import javafx.event.EventHandler
 import javafx.geometry.Insets
 import javafx.geometry.Pos
@@ -25,7 +28,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.*
 import kotlinx.coroutines.launch
-import plotterLineChart.plot
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.math.round
@@ -35,7 +37,7 @@ import kotlin.math.round
   Firma:        ABB Technikerschule
   Autor:        P.Koch P.Theiler und T.Graf
 
-  Beschreibung: Gui Funktionen und Aufrufe diverser Anzeigeelemente
+  Beschreibung: weather2b.Gui Funktionen und Aufrufe diverser Anzeigeelemente
  */
 
 class Gui : Application() {
@@ -147,7 +149,7 @@ class Gui : Application() {
             """.trimIndent()
                 VBox.setVgrow(this, Priority.NEVER)
             }
-            //HBox.setHgrow(dayView.hBoxDayView, Priority.ALWAYS)
+            //HBox.setHgrow(weather2b.dayView.hBoxDayView, Priority.ALWAYS)
             //HBox.setHgrow(favBox, Priority.ALWAYS)
             dayView.hBoxDayView.maxWidthProperty().bind(this.widthProperty().multiply(0.6))
             //favBox.maxWidthProperty().bind(this.widthProperty().multiply(0.5))
@@ -161,7 +163,7 @@ class Gui : Application() {
         dayView.favorites = guiFavorites
         dayView.addFavoriteButtonToBox()
         guiFavorites.updateFavoritesList(onHomeClick)
-        manager.getFavoritesObservableList().addListener(javafx.collections.ListChangeListener{
+        manager.getFavoritesObservableList().addListener(ListChangeListener{
         guiFavorites.updateFavoritesList(onHomeClick)})
 
         val root = BorderPane().apply {
@@ -171,7 +173,7 @@ class Gui : Application() {
             background = Background(BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets(0.0, 0.0, 0.0, 0.0)))
             isFocusTraversable = true   // Nimmt den Cursor aus dem Textfeld. Textfeld will Aufmerksamkeit haben...
         }
-        //dayView.getView().prefWidthProperty().bind(root.widthProperty().multiply(0.50))
+        //weather2b.dayView.getView().prefWidthProperty().bind(root.widthProperty().multiply(0.50))
         dayView.getView().minWidth = 200.0
         hBoxBottom.prefHeightProperty().bind(root.heightProperty().multiply(0.45))
         hBoxBottom.minHeight = 100.0
@@ -253,8 +255,8 @@ class Gui : Application() {
     private fun fillPlotterView(weather: Weather) {
         // API-Daten neu laden für Plotter Line Chart und erste 7 Werte auslesen
         weather.getDailyWeatherDataAll().take(7).forEach { day ->
-            plot("Max Temperatur", day.getTemperatureMax().toInt())
-            plot("Min Temperatur", day.getTemperatureMin().toInt())
+            plotterLineChart.plot("Max Temperatur", day.getTemperatureMax().toInt())
+            plotterLineChart.plot("Min Temperatur", day.getTemperatureMin().toInt())
         }
     }
 

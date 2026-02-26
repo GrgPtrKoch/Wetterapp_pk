@@ -1,3 +1,5 @@
+package weather2b
+
 import java.time.LocalDateTime
 
 /*

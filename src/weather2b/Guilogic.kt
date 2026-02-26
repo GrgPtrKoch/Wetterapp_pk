@@ -1,3 +1,5 @@
+package weather2b
+
 import javafx.collections.ObservableList
 
 /*
@@ -5,7 +7,7 @@ import javafx.collections.ObservableList
   Firma:        ABB Technikerschule
   Autor:        P.Koch P.Theiler und T.Graf
 
-  Beschreibung: Interface um auf die Methoden der verschiedenen Ein-, Ausgabe zwischen dem Gui und dem manager zuzugreifen
+  Beschreibung: Interface um auf die Methoden der verschiedenen Ein-, Ausgabe zwischen dem weather2b.Gui und dem manager zuzugreifen
  */
 
 interface Guilogic {

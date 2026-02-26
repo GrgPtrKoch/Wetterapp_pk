@@ -1,3 +1,5 @@
+package weather2b
+
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.Cursor

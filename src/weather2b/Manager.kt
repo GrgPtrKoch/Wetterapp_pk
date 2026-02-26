@@ -1,3 +1,5 @@
+package weather2b
+
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import java.io.File
@@ -40,10 +42,10 @@ class Manager() : Guilogic {
     private fun weatherCodeScore(forecasted: Int, actual: Int): Double {
         if (forecasted == actual) return 100.0
         val forecastedCategory = weatherCodeCategories.indexOfFirst { forecasted in it }
-//        /* Hier kann man es auf Wunsch aktivieren um den Weather Code Forecast auf der Console auszugeben */
+//        /* Hier kann man es auf Wunsch aktivieren um den weather2b.Weather Code Forecast auf der Console auszugeben */
 //        println("WC-Prognosewert: $forecasted (ProgKategorie: $forecastedCategory)")
         val actualCategory = weatherCodeCategories.indexOfFirst { actual in it }
-//        /* Hier kann man es auf Wunsch aktivieren um den aktuellen Weather Code auf der Console auszugeben */
+//        /* Hier kann man es auf Wunsch aktivieren um den aktuellen weather2b.Weather Code auf der Console auszugeben */
 //        println("WC-aktueller Wert: $actual (Kategorie: $actualCategory)")
 
         return when {
@@ -119,7 +121,7 @@ class Manager() : Guilogic {
             fetchedLocations = apiHandler.getLocations(searchText)
             return fetchedLocations
         } catch (e: NullPointerException) {
-            System.err.println("Die Ortsabfrage aus dem Manager hat nicht funktioniert: ${e.message}")
+            System.err.println("Die Ortsabfrage aus dem weather2b.Manager hat nicht funktioniert: ${e.message}")
             e.printStackTrace()
             return mutableListOf()
         }
@@ -134,7 +136,7 @@ class Manager() : Guilogic {
             return weather
         } catch (e: NullPointerException) {
             e.printStackTrace()
-            System.err.println("Die Wetterabfrage aus dem Manager hat nicht funktioniert: ${e.message}")
+            System.err.println("Die Wetterabfrage aus dem weather2b.Manager hat nicht funktioniert: ${e.message}")
             null
         }
     }

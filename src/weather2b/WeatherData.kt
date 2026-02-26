@@ -1,3 +1,5 @@
+package weather2b
+
 import kotlinx.coroutines.sync.Mutex
 import java.beans.XMLDecoder
 import java.beans.XMLEncoder

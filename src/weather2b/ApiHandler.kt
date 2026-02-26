@@ -1,3 +1,5 @@
+package weather2b
+
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
@@ -13,7 +15,7 @@ import java.time.LocalDateTime
   Firma:        ABB Technikerschule
   Autor:        P.Koch
 
-  Beschreibung: API Wetter und Location Daten werden vom Netz eingelesen und die Wetterobjekte gebildet.
+  Beschreibung: API Wetter und weather2b.Location Daten werden vom Netz eingelesen und die Wetterobjekte gebildet.
  */
 
 class ApiHandler() : Api {

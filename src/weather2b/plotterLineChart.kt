@@ -1,3 +1,5 @@
+package weather2b
+
 import javafx.application.Platform.runLater
 import javafx.collections.FXCollections
 import javafx.geometry.Side
@@ -53,7 +55,7 @@ object plotterLineChart {
         xAxis.label = "7 Tage Wettervorhersage [day/date]"
         yAxis.label = "Temperatur [°C]"
 
-        // Bei X- und Y-Achse Labels die gewuenschte Schriftgroesse von appStyle verwenden
+        // Bei X- und Y-Achse Labels die gewuenschte Schriftgroesse von weather2b.appStyle verwenden
         runLater {
             (xAxis.lookup(".axis-label") as? Label)?.let {appStyle.layoutLabelBottomRight(it) }
             (yAxis.lookup(".axis-label") as? Label)?.let {appStyle.layoutLabelBottomRight(it) }

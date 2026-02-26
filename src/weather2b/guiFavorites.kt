@@ -1,3 +1,5 @@
+package weather2b
+
 import javafx.collections.ListChangeListener
 import javafx.geometry.Insets
 import javafx.geometry.Pos
@@ -23,7 +25,7 @@ import kotlin.collections.forEach
   Firma:        ABB Technikerschule
   Autor:        P.Theiler
 
-  Beschreibung: Hier werden die Favoriten mittels Gui Eingabe hinzugefügt und aufbereitet.
+  Beschreibung: Hier werden die Favoriten mittels weather2b.Gui Eingabe hinzugefügt und aufbereitet.
  */
 
 object guiFavorites {

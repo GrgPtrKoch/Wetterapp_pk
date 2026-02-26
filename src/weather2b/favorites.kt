@@ -1,3 +1,5 @@
+package weather2b
+
 import javafx.scene.image.Image
 import java.io.Serializable
 

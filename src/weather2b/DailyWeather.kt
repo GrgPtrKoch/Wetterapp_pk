@@ -1,3 +1,5 @@
+package weather2b
+
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -7,7 +9,7 @@ import java.time.LocalTime
   Firma:        ABB Technikerschule
   Autor:        P.Koch und T.Graf
 
-  Beschreibung: In Daily Weather werden die Daten der kommenden 14 Tage verarbeitet
+  Beschreibung: In Daily weather2b.Weather werden die Daten der kommenden 14 Tage verarbeitet
  */
 
 data class DailyWeather(

@@ -1,3 +1,5 @@
+package weather2b
+
 import javafx.animation.Interpolator
 import javafx.animation.RotateTransition
 import javafx.geometry.HPos
@@ -5,6 +7,7 @@ import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.control.Label
 import javafx.scene.control.ScrollPane
+import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import javafx.scene.layout.ColumnConstraints
 import javafx.scene.layout.GridPane
@@ -96,7 +99,7 @@ object detailsView {
         appStyle.layoutLabelHeaderRight(this)
     }
 
-    private val windDirectionArrow = javafx.scene.image.Image("/icons/Arrow_Down_LG.png")
+    private val windDirectionArrow = Image("/icons/Arrow_Down_LG.png")
 
     val windImageView = ImageView().apply {
         image = windDirectionArrow
