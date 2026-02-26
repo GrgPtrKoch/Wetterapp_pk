@@ -63,12 +63,8 @@ object guiFavorites {
                 font = appStyle.FONT_24
             }
             children.addAll(ttlFavorites, favoriteConstruct)
-        }
-        manager.getFavoritesObservableList().addListener(ListChangeListener {
             updateFavoritesList(onHomeClick)
-        })
-        updateFavoritesList(onHomeClick)
-
+        }
         return favoriteBox
     }
 
@@ -130,6 +126,14 @@ object guiFavorites {
             children.addAll(locationName, lblTemperature, lblWeatherIcon, btnRemoveFavorite)
         }
         return boxList
+    }
+
+    fun setupListener(onHomeClick: (Location) -> Job){
+        manager.getFavoritesObservableList().addListener(ListChangeListener {
+            javafx.application.Platform.runLater {
+                updateFavoritesList(onHomeClick)
+            }
+        })
     }
 
     fun updateFavoritesList(onHomeClick: (Location) -> Job) {
