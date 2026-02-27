@@ -180,6 +180,15 @@ class Gui : Application() {
                 withContext(Dispatchers.IO){
                     manager.updateALLFavorites()
                 }
+                val activeLocation = selectedLocation
+                if(activeLocation != null){
+                    val freshWeather = withContext(Dispatchers.IO){
+                        manager.getCurrentWeather(activeLocation)
+                    }
+                    if (freshWeather != null){
+                        fillInWeatherData(freshWeather)
+                    }
+                }
                 delay(600_000)
             }
         }
