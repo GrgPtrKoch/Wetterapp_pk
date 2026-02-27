@@ -36,6 +36,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import weather2b.data.sourcedata.Location
@@ -172,6 +174,15 @@ class Gui : Application() {
         dayView.favorites = guiFavorites
         dayView.addFavoriteButtonToBox()
         guiFavorites.setupListener(onHomeClick)
+
+        scope.launch {
+            while (isActive){
+                withContext(Dispatchers.IO){
+                    manager.updateALLFavorites()
+                }
+                delay(600_000)
+            }
+        }
 
         val root = BorderPane().apply {
             top = hBoxSearchAccuracy

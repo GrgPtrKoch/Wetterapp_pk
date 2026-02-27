@@ -42,6 +42,7 @@ class Manager {
     storeFavorites(favorite: Favorite)
     readFavorites()
     getAllFavorites()
+    updateALLFavorites()
     removeStoredWeatherData(from: Location)
     getEntriesForLocation(locationID: Int)
 }
@@ -69,6 +70,7 @@ interface Guilogic {
     getFavoritesObservableList()
     checkAccuracy()
     updateFavoriteFile()
+    updateALLFavorites()
 }
 
 class Gui {
@@ -190,6 +192,9 @@ class Favorite {
 }
 
 enum WeatherCodes {
+    + code: Int
+    + description: String
+    + iconName: String
      SONNIG
      LEICHT_BEWOELKT
      BEWOELKT
@@ -208,7 +213,7 @@ enum WeatherCodes {
      GEWITTER_NACHT
      UNBEKANNT
      icon: Image
-     fromCode(code: Int, weather: DailyWeather)
+     fromCode(code: Int, weather: DailyWeather): WeatherCodes
 }
 
 
