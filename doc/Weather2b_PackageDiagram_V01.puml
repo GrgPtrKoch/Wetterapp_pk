@@ -1,0 +1,66 @@
+@startuml Weather2B_Paketdiagramm
+
+top to bottom direction
+
+skinparam package {
+    FontSize 16
+    FontStyle bold
+}
+
+title "Paketdiagramm – Weather2B"
+
+package "weather2b"  {
+top to bottom direction
+    package "api"{
+        [Api] <<interface>>
+        [ApiHandler]
+    }
+
+    package "data"{
+        package "data.favorites"{
+            [Favorite]
+        }
+        package "data.sourcedata"{
+            [DailyWeather]
+            [HourlyWeather]
+            [Location]
+            [Weather]
+        }
+        package "data.wrapper"{
+            [FavoriteWrapper]
+            [FileWrapper]
+            [HourlyWrapper]
+        }
+            [Storabledata] <<interface>>
+            [WeatherData]
+    }
+
+    package "gui"{
+        package "gui.control"{
+            [Manager]
+        }
+
+        package "gui.design"{
+            [WeatherCodes] <<enum>>
+            [appStyle] <<object>>
+        }
+
+        package "gui.view"{
+            [accuracyBox] <<object>>
+            [dayView] <<object>>
+            [detailsView] <<object>>
+            [guiFavorites] <<object>>
+            [guiSearchbar] <<object>>
+            [plotterLineChart] <<object>>
+        }
+            [Guilogic] <<interface>>
+            [Gui]
+    }
+    api -[hidden]down->data
+    data -[hidden]down->gui
+}
+
+
+
+@enduml
+
