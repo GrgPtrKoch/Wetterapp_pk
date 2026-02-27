@@ -22,4 +22,5 @@ interface Guilogic {
     fun getFavoritesObservableList(): ObservableList<Favorite>
     fun checkAccuracy(id: Int, currentWeather: Weather): Double?
     fun updateFavoriteFile()
+    fun updateALLFavorites()
 }

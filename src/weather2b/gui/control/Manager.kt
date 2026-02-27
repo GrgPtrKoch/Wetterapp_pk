@@ -10,6 +10,7 @@ package weather2b.gui.control
 
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
+import jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle
 import weather2b.data.sourcedata.Location
 import weather2b.data.sourcedata.Weather
 import weather2b.api.Api
@@ -187,6 +188,17 @@ class Manager() : Guilogic {
     override fun checkForFavorites(location: Int): Boolean {
         return favoritesList.any {
             it.location.id == location
+        }
+    }
+
+    override fun updateALLFavorites() {
+        favoritesList.forEachIndexed { index, fav ->
+            val freshWeather = apiHandler.fetchWeather(fav.location)
+            if (freshWeather != null){
+                fav.temperature = freshWeather.getTemperature()
+                fav.iconFileName = freshWeather.getWeatherCode().iconName
+                favoritesList[index] = fav
+            }
         }
     }
 }
