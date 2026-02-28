@@ -276,7 +276,9 @@ class Gui : Application() {
         detailsView.lblPrecipitationValue.text = "${weather.getPrecipitation()} mm"
         detailsView.lblSunriseValue.text = "${weather.getDailyList()[0].getSunrise()} Uhr"
         detailsView.lblSunsetValue.text = "${weather.getDailyList()[0].getSunset()} Uhr"
-        detailsView.lblWindSpeedValue.text = "${weather.getWindSpeed()} km/h"
+        val speed = weather.getWindSpeed()
+        detailsView.lblWindSpeedValue.text = "$speed km/h"
+        if (speed >= 70) { detailsView.warningImageView.isVisible = true }
         detailsView.updateWindDirection(weather.getWindDirection())
         detailsView.lblApparentTemperatureValue.text = "${round(weather.getApparentTemperature()).toInt()}º"
 

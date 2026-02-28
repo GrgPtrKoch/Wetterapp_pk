@@ -19,6 +19,7 @@ import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import javafx.scene.layout.ColumnConstraints
 import javafx.scene.layout.GridPane
+import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import javafx.util.Duration
 import weather2b.gui.design.appStyle
@@ -89,10 +90,25 @@ object detailsView {
         appStyle.layoutLabelLeft(this)
     }
 
+    private val warningImage = Image("/icons/Triangle_Warning.png")
+
+    val warningImageView = ImageView().apply {
+        image = warningImage
+        fitHeight = 24.0
+        fitWidth = 24.0
+        isPreserveRatio = true
+        isVisible = false
+    }
+
+    val hBoxWindSpeed = HBox().apply {
+        alignment = Pos.CENTER_LEFT
+        spacing = 5.0
+        children.addAll(lblWindSpeedValue, warningImageView)
+    }
     val vBoxWindSpeed = VBox().apply {
         alignment = Pos.CENTER_LEFT
         spacing = 5.0
-        children.addAll(lblWindSpeed, lblWindSpeedValue)
+        children.addAll(lblWindSpeed, hBoxWindSpeed)
     }
 
     val lblWindDirection = Label("Windrichtung").apply {
