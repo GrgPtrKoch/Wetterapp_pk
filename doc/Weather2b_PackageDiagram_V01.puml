@@ -10,13 +10,16 @@ skinparam package {
 title "Paketdiagramm – Weather2B"
 
 package "weather2b"  {
-top to bottom direction
-    package "api"{
-        [Api] <<interface>>
-        [ApiHandler]
-    }
+left to right direction
+   package "control"{
+            [Manager]
+        }
 
-    package "data"{
+   package "data"{
+        package "data.api"{
+                [Api] <<interface>>
+                [ApiHandler]
+            }
         package "data.favorites"{
             [Favorite]
         }
@@ -35,12 +38,8 @@ top to bottom direction
             [WeatherData]
     }
 
-    package "gui"{
-        package "gui.control"{
-            [Manager]
-        }
-
-        package "gui.design"{
+   package "gui"{
+   package "gui.design"{
             [WeatherCodes] <<enum>>
             [appStyle] <<object>>
         }
@@ -56,8 +55,6 @@ top to bottom direction
             [Guilogic] <<interface>>
             [Gui]
     }
-    api -[hidden]down->data
-    data -[hidden]down->gui
 }
 
 
