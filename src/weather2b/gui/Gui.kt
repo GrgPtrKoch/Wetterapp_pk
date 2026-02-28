@@ -10,7 +10,6 @@ package weather2b.gui
 
 import javafx.application.Application
 import javafx.collections.FXCollections
-import javafx.collections.ListChangeListener
 import javafx.event.EventHandler
 import javafx.geometry.Insets
 import javafx.geometry.Pos
@@ -41,7 +40,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import weather2b.data.sourcedata.Location
-import weather2b.gui.control.Manager
+import weather2b.control.Manager
 import weather2b.data.sourcedata.Weather
 import weather2b.gui.view.accuracyBox
 import weather2b.gui.view.dayView

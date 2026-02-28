@@ -9,7 +9,6 @@
 package weather2b.data.sourcedata
 
 import weather2b.data.wrapper.HourlyWrapper
-import weather2b.gui.design.WeatherCodes
 
 data class Weather(
     private val location: Location,

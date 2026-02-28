@@ -8,7 +8,6 @@
 
 package weather2b.data.sourcedata
 
-import weather2b.gui.design.WeatherCodes
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime

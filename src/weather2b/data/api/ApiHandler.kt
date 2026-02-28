@@ -6,14 +6,14 @@
   Beschreibung: API Wetter und Location Daten werden vom Netz eingelesen und die Wetterobjekte gebildet.
  */
 
-package weather2b.api
+package weather2b.data.api
 
 import org.json.JSONObject
 import weather2b.data.sourcedata.DailyWeather
 import weather2b.data.sourcedata.HourlyWeather
 import weather2b.data.sourcedata.Location
 import weather2b.data.sourcedata.Weather
-import weather2b.gui.design.WeatherCodes
+import weather2b.data.sourcedata.WeatherCodes
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection

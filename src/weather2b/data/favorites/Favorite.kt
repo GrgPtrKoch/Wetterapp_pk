@@ -10,7 +10,7 @@ package weather2b.data.favorites
 
 import javafx.scene.image.Image
 import weather2b.data.sourcedata.Location
-import weather2b.gui.design.loadIcon
+import weather2b.data.sourcedata.loadIcon
 import java.io.Serializable
 
 class Favorite: Serializable {

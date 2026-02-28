@@ -6,7 +6,7 @@
   Beschreibung: API Interface zwischen API Handler und Manager
  */
 
-package weather2b.api
+package weather2b.data.api
 
 import weather2b.data.sourcedata.Location
 import weather2b.data.sourcedata.Weather

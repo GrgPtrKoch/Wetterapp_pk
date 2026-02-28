@@ -6,15 +6,14 @@
   Beschreibung: Zentrale Klasse welche alle anderen miteinander verbindet
  */
 
-package weather2b.gui.control
+package weather2b.control
 
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
-import jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle
 import weather2b.data.sourcedata.Location
 import weather2b.data.sourcedata.Weather
-import weather2b.api.Api
-import weather2b.api.ApiHandler
+import weather2b.data.api.Api
+import weather2b.data.api.ApiHandler
 import weather2b.data.Storabledata
 import weather2b.data.WeatherData
 import weather2b.gui.Guilogic
@@ -38,13 +37,13 @@ class Manager() : Guilogic {
 
 
     private val weatherCodeCategories = listOf(
-        listOf(0, 100),
-        (1..39).toList() + (101..139).toList(),
-        (40..49).toList() + (140..149).toList(),
-        (50..59).toList() + (80..82).toList() + (150..159).toList() + (180..182).toList(),
-        (60..69).toList() + (160..169).toList(),
-        (70..79).toList() + (83..90).toList() + (170..179).toList() + (183..190).toList(),
-        (91..99).toList() + (191..199).toList()
+        listOf(0, 100), // klar
+        (1..3).toList() + (101..103).toList(), // bewölkt
+        (4..39).toList() + (104..139).toList(), // windig, diverse Wetterphänomene
+        (40..49).toList() + (140..149).toList(), // nebelig
+        (50..59).toList()  + (150..159).toList(), // leichter Regen
+        (60..69).toList() + (160..169).toList() + (70..79).toList() + (80..82).toList() + (83..90).toList() + (170..179).toList() + (180..182).toList() + (183..190).toList(), // leichter Regenschauer, Regen oder Schnee
+        (91..99).toList() + (191..199).toList() // Gewitter
     )
 
     private fun weatherCodeScore(forecasted: Int, actual: Int): Double {
@@ -59,9 +58,11 @@ class Manager() : Guilogic {
         return when {
             forecastedCategory == -1 || actualCategory == -1 -> 0.0
             forecastedCategory == actualCategory -> 100.0
-            abs(forecastedCategory - actualCategory) == 1 -> 98.0
-            abs(forecastedCategory - actualCategory) in 2..3 -> 95.0
-            abs(forecastedCategory - actualCategory) > 3 -> 90.0
+            abs(forecastedCategory - actualCategory) == 1 -> 95.0
+            abs(forecastedCategory - actualCategory) in 2..3 -> 90.0
+            abs(forecastedCategory - actualCategory) == 4 -> 80.0
+            abs(forecastedCategory - actualCategory) == 5 -> 40.0
+            abs(forecastedCategory - actualCategory) == 6 -> 5.0
             else -> 0.0     // in Kategorien-Berechnung ist etwas falsch gelaufen.
         }
     }
@@ -81,8 +82,8 @@ class Manager() : Guilogic {
                     if (hoursAhead !in 24..<past.hourlyForecasts.size) continue
                     // Prognose-Wertepaare für diese Stunde holen
                     val forecast = past.hourlyForecasts[currentHour]
-                    // Temperaturdifferenz ab 2º C => 0% Güte!
-                    val limit = 5.0
+                    // Temperaturdifferenz ab 10º C => 0% Güte!
+                    val limit = 10.0
                     val error = abs(forecast.wrapperTemperature - currentWeather.getTemperature())
 //                    /* Hier kann man es auf Wunsch aktivieren zu Diagnosezwecken */
 //                    println("Temp-Prognose: $forecast, an Stelle: $currentHour in ${past.id} -> $error")

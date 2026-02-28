@@ -86,7 +86,7 @@ object dayView {
         font = appStyle.FONT_16
     }
     val lblWeatherIcon = ImageView().apply {
-        fitWidth = 60.0
+        fitWidth = 40.0
         isPreserveRatio = true
         translateY = -50.0
         isSmooth = true

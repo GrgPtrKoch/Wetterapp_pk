@@ -6,10 +6,9 @@
   Beschreibung: Definition der Wetter Codes und Icons welche im GUI angezeigt werden
  */
 
-package weather2b.gui.design
+package weather2b.data.sourcedata
 
 import javafx.scene.image.Image
-import weather2b.data.sourcedata.DailyWeather
 import java.time.LocalDateTime
 
 
